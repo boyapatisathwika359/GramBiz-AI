@@ -1,0 +1,1699 @@
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f4f7f6;
+  color: #1f2937;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: #166534;
+  color: white;
+  padding: 13px 25px;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: 0.3s ease;
+}
+
+button:hover {
+  background: #14532d;
+  transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   HOME PAGE
+========================================================= */
+
+.home-page {
+  min-height: 100vh;
+  padding: 40px 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(135deg, #e8f5e9, #f4f7f6);
+}
+
+.home-page h1 {
+  font-size: 52px;
+  color: #166534;
+  margin-bottom: 12px;
+}
+
+.home-page h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.home-page p {
+  max-width: 650px;
+  margin-bottom: 30px;
+  line-height: 1.7;
+  font-size: 18px;
+}
+
+
+/* =========================================================
+   LANGUAGE SELECTION
+========================================================= */
+
+.language-box {
+  position: absolute;
+  top: 25px;
+  right: 30px;
+  width: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  z-index: 10;
+}
+
+.language-box label {
+  color: #166534;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.language-box select {
+  padding: 10px 12px;
+  border: 2px solid #166534;
+  border-radius: 9px;
+  background: white;
+  color: #1f2937;
+  font-size: 15px;
+  cursor: pointer;
+  outline: none;
+}
+
+.language-box select:focus {
+  box-shadow: 0 0 0 3px rgba(22, 101, 52, 0.15);
+}
+
+
+/* =========================================================
+   FORM PAGE
+========================================================= */
+
+.form-page {
+  min-height: 100vh;
+  padding: 40px 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.form-page h1 {
+  color: #166534;
+  margin-bottom: 5px;
+}
+
+.form-page p {
+  margin-bottom: 15px;
+}
+
+.form-page form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.form-page input {
+  width: 350px;
+  padding: 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  background: white;
+}
+
+.form-page input:focus {
+  border-color: #166534;
+  box-shadow: 0 0 0 2px rgba(22, 101, 52, 0.1);
+}
+
+
+/* =========================================================
+   SKILLS PAGE
+========================================================= */
+
+.skills-page {
+  min-height: 100vh;
+  padding: 40px 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.skills-page h1 {
+  color: #166534;
+}
+
+.selection-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  max-width: 700px;
+  margin-bottom: 20px;
+}
+
+.selection-container button {
+  background: white;
+  color: #166534;
+  border: 2px solid #166534;
+}
+
+.selection-container button:hover {
+  background: #166534;
+  color: white;
+}
+
+.selection-container button.selected {
+  background: #166534;
+  color: white;
+}
+
+.continue-button {
+  margin-top: 10px;
+}
+
+
+/* =========================================================
+   AI ANALYSIS PAGE
+========================================================= */
+
+.analysis-page {
+  min-height: 100vh;
+  padding: 40px 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.analysis-card {
+  width: 100%;
+  max-width: 650px;
+  padding: 45px;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.ai-icon {
+  font-size: 55px;
+  margin-bottom: 15px;
+}
+
+.analysis-card h1 {
+  color: #166534;
+  margin-bottom: 15px;
+}
+
+.analysis-card > p {
+  color: #4b5563;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.analysis-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  text-align: left;
+  margin-bottom: 30px;
+}
+
+.analysis-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  border-radius: 8px;
+  background: #f3f4f6;
+}
+
+.analysis-step.completed {
+  color: #166534;
+  background: #ecfdf5;
+}
+
+.analysis-step.active {
+  color: #92400e;
+  background: #fffbeb;
+}
+
+.progress-container {
+  width: 100%;
+  height: 10px;
+  background: #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #166534;
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  margin: 12px 0 20px !important;
+  font-weight: bold;
+  color: #166534 !important;
+}
+
+
+/* =========================================================
+   RECOMMENDATIONS PAGE
+========================================================= */
+
+.recommendations-page {
+  min-height: 100vh;
+  padding: 50px 25px 70px;
+  background: linear-gradient(135deg, #f4f8f6, #eaf4ee);
+}
+
+
+/* Header */
+
+.recommendations-page h1 {
+  max-width: 1000px;
+  margin: 0 auto 12px;
+  text-align: center;
+  font-size: 38px;
+  color: #123b2a;
+  font-weight: 700;
+}
+
+.recommendations-page > p {
+  max-width: 850px;
+  margin: 0 auto 40px;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.6;
+  color: #52635a;
+}
+
+
+/* Recommendation List */
+
+.recommendations-list {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+
+/* Recommendation Card */
+
+.recommendation-card {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid #dce8df;
+  border-radius: 18px;
+  padding: 28px 32px;
+  box-shadow: 0 8px 25px rgba(22, 101, 52, 0.08);
+  transition: all 0.25s ease;
+}
+
+.recommendation-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(22, 101, 52, 0.14);
+}
+
+
+/* Ranking */
+
+.recommendation-rank {
+  display: inline-block;
+  font-size: 15px;
+  font-weight: 700;
+  color: #166534;
+  background: #e8f5ec;
+  padding: 6px 12px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+
+
+/* Business Name */
+
+.recommendation-card h2 {
+  margin: 4px 0 12px;
+  font-size: 27px;
+  color: #163b2b;
+}
+
+
+/* Suitability */
+
+.suitability {
+  display: inline-block;
+  padding: 7px 14px;
+  border-radius: 20px;
+  background: #e8f7ed;
+  color: #08743c;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+
+/* Information */
+
+.recommendation-info {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.recommendation-info p {
+  margin: 0;
+  padding: 13px 15px;
+  background: #f7faf8;
+  border-radius: 10px;
+  color: #33443a;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.recommendation-info strong {
+  color: #163b2b;
+}
+
+
+/* Why Option */
+
+.recommendation-reason {
+  margin-top: 18px;
+  padding: 15px 17px;
+  background: #f0f7f2;
+  border-left: 4px solid #166534;
+  border-radius: 8px;
+  color: #34463b;
+  line-height: 1.5;
+}
+
+.recommendation-reason strong {
+  color: #166534;
+}
+
+
+/* Note */
+
+.recommendation-note {
+  width: 100%;
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 18px 22px;
+  background: #fff9e8;
+  border-left: 5px solid #e59b00;
+  border-radius: 8px;
+  color: #59491e;
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+
+/* Recommendation Button */
+
+.recommendations-page button {
+  display: block;
+  margin: 28px auto 0;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 10px;
+  background: #166534;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.recommendations-page button:hover {
+  background: #0f4f27;
+  transform: translateY(-2px);
+}
+
+
+/* No Recommendation */
+
+.no-recommendation {
+  width: 100%;
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 30px;
+  text-align: center;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.no-recommendation h2 {
+  color: #163b2b;
+  margin-bottom: 12px;
+}
+
+.no-recommendation p {
+  color: #59665e;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   MARKET ANALYSIS
+========================================================= */
+
+.market-page {
+  min-height: 100vh;
+  padding: 50px 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f4f7f6;
+}
+
+.market-header {
+  width: 100%;
+  max-width: 700px;
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.market-icon {
+  font-size: 50px;
+  margin-bottom: 10px;
+}
+
+.market-header h1 {
+  color: #166534;
+  margin-bottom: 12px;
+}
+
+.market-header p {
+  color: #4b5563;
+  line-height: 1.7;
+}
+
+.market-grid {
+  width: 100%;
+  max-width: 1000px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.market-card {
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+  transition: 0.3s ease;
+}
+
+.market-card:hover {
+  transform: translateY(-5px);
+}
+
+.market-card-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.market-card h2 {
+  color: #1f2937;
+  margin-bottom: 10px;
+}
+
+.market-value {
+  display: inline-block;
+  color: #166534;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.market-card p {
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.market-note {
+  width: 100%;
+  max-width: 1000px;
+  margin: 25px 0;
+  padding: 16px 20px;
+  background: #fffbeb;
+  border-left: 4px solid #d97706;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   FINANCIAL PLAN
+========================================================= */
+
+.financial-page {
+  min-height: 100vh;
+  padding: 50px 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f4f7f6;
+}
+
+.financial-header {
+  width: 100%;
+  max-width: 700px;
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.financial-icon {
+  font-size: 50px;
+  margin-bottom: 10px;
+}
+
+.financial-header h1 {
+  color: #166534;
+  margin-bottom: 12px;
+}
+
+.financial-header p {
+  color: #4b5563;
+  line-height: 1.7;
+}
+
+.financial-form {
+  width: 100%;
+  max-width: 600px;
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.financial-form input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 16px;
+  outline: none;
+}
+
+.financial-form input:focus {
+  border-color: #166534;
+}
+
+.financial-result {
+  width: 100%;
+  max-width: 900px;
+  margin-top: 30px;
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+  text-align: center;
+}
+
+.financial-result h2 {
+  color: #166534;
+  margin-bottom: 25px;
+}
+
+.financial-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.financial-summary div {
+  padding: 20px;
+  background: #f4f7f6;
+  border-radius: 12px;
+}
+
+.financial-summary span {
+  display: block;
+  color: #4b5563;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.financial-summary strong {
+  display: block;
+  color: #166534;
+  font-size: 22px;
+}
+
+.financial-note {
+  margin: 25px 0;
+  padding: 15px 18px;
+  background: #fffbeb;
+  border-left: 4px solid #d97706;
+  color: #4b5563;
+  line-height: 1.6;
+  text-align: left;
+}
+
+
+/* =========================================================
+   FINANCING SCHEMES
+========================================================= */
+
+.schemes-page {
+  min-height: 100vh;
+  padding: 50px 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f4f7f6;
+}
+
+.schemes-header {
+  width: 100%;
+  max-width: 750px;
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.schemes-icon {
+  font-size: 50px;
+  margin-bottom: 10px;
+}
+
+.schemes-header h1 {
+  color: #166534;
+  margin-bottom: 12px;
+}
+
+.schemes-header h2 {
+  color: #374151;
+  font-size: 20px;
+  margin-top: 18px;
+}
+
+.schemes-header p {
+  color: #4b5563;
+  line-height: 1.7;
+}
+
+.schemes-list {
+  width: 100%;
+  max-width: 1000px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.scheme-card {
+  background: white;
+  padding: 28px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+  transition: 0.3s ease;
+}
+
+.scheme-card:hover {
+  transform: translateY(-5px);
+}
+
+.scheme-card h2 {
+  color: #166534;
+  margin-bottom: 18px;
+}
+
+.scheme-card p {
+  color: #4b5563;
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.scheme-card strong {
+  color: #1f2937;
+}
+
+.scheme-card button {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.scheme-note {
+  width: 100%;
+  max-width: 1000px;
+  margin: 25px 0;
+  padding: 18px 20px;
+  background: #fffbeb;
+  border-left: 4px solid #d97706;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.scheme-note strong {
+  color: #92400e;
+}
+
+
+/* =========================================================
+   FINAL REPORT
+========================================================= */
+
+.report-page {
+  min-height: 100vh;
+  padding: 50px 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f4f7f6;
+}
+
+.report-header {
+  width: 100%;
+  max-width: 750px;
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.report-icon {
+  font-size: 50px;
+  margin-bottom: 10px;
+}
+
+.report-header h1 {
+  color: #166534;
+  margin-bottom: 12px;
+}
+
+.report-header p {
+  color: #4b5563;
+  line-height: 1.7;
+}
+
+.report-card {
+  width: 100%;
+  max-width: 1000px;
+  background: white;
+  padding: 28px;
+  margin-bottom: 22px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+}
+
+.report-card h2 {
+  color: #166534;
+  margin-bottom: 22px;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.profile-grid div {
+  background: #f4f7f6;
+  padding: 18px;
+  border-radius: 10px;
+}
+
+.profile-grid span,
+.report-grid span {
+  display: block;
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.profile-grid strong {
+  color: #1f2937;
+}
+
+.report-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.report-grid div {
+  background: #f4f7f6;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.report-grid strong {
+  color: #166534;
+  font-size: 18px;
+}
+
+.action-list {
+  padding-left: 25px;
+  color: #374151;
+}
+
+.action-list li {
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+
+.report-note {
+  width: 100%;
+  max-width: 1000px;
+  padding: 18px 20px;
+  margin-bottom: 25px;
+  background: #fffbeb;
+  border-left: 4px solid #d97706;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.report-buttons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+
+/* =========================================================
+   MOBILE RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .home-page h1 {
+    font-size: 40px;
+  }
+
+  .home-page h2 {
+    font-size: 22px;
+  }
+
+  .language-box {
+    top: 15px;
+    right: 15px;
+    width: 150px;
+  }
+
+  .form-page input {
+    width: 100%;
+    max-width: 350px;
+  }
+
+  .analysis-card {
+    padding: 25px;
+  }
+
+  .recommendations-page {
+    padding: 35px 15px 50px;
+  }
+
+  .recommendations-page h1 {
+    font-size: 30px;
+  }
+
+  .recommendations-page > p {
+    font-size: 16px;
+  }
+
+  .recommendation-card {
+    padding: 22px;
+  }
+
+  .recommendation-card h2 {
+    font-size: 23px;
+  }
+
+  .recommendation-info {
+    grid-template-columns: 1fr;
+  }
+
+  .market-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .financial-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .schemes-list {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-grid,
+  .report-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+@media (max-width: 480px) {
+
+  .home-page {
+    padding: 30px 15px;
+  }
+
+  .home-page h1 {
+    font-size: 34px;
+  }
+
+  .recommendations-page h1 {
+    font-size: 26px;
+  }
+
+  .recommendation-card {
+    padding: 18px;
+  }
+
+  .recommendation-card h2 {
+    font-size: 21px;
+  }
+
+  .recommendations-page button {
+    width: 100%;
+  }
+
+  .language-box {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin: 0 auto 25px;
+  }
+}
+/* ============================= */
+/* ELIGIBILITY CHECK */
+/* ============================= */
+
+.eligibility-result {
+  width: 90%;
+  max-width: 550px;
+
+  margin: 30px auto;
+  padding: 30px;
+
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 15px;
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+
+  text-align: left;
+}
+
+/* Heading */
+
+.eligibility-result h2 {
+  text-align: center;
+  color: #166534;
+  font-size: 26px;
+  margin-bottom: 20px;
+}
+
+/* Scheme Name */
+
+.eligibility-result h3 {
+  text-align: center;
+  color: #1f2937;
+  font-size: 22px;
+  margin-bottom: 25px;
+}
+
+/* Details */
+
+.eligibility-result p {
+  color: #4b5563;
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.eligibility-result strong {
+  color: #1f2937;
+}
+
+/* Eligibility Status */
+
+.eligibility-status {
+  width: 100%;
+  margin: 20px 0;
+
+  padding: 14px;
+
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-left: 4px solid #f59e0b;
+
+  border-radius: 8px;
+
+  color: #92400e;
+  font-weight: bold;
+  text-align: center;
+
+  box-sizing: border-box;
+}
+
+/* Close Button */
+
+.eligibility-result button {
+  width: 100%;
+
+  margin-top: 10px;
+
+  padding: 13px 20px;
+
+  background: #166534;
+  color: white;
+
+  border: none;
+  border-radius: 8px;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.eligibility-result button:hover {
+  background: #14532d;
+  transform: none;
+}
+
+/* ============================= */
+/* MOBILE */
+/* ============================= */
+
+@media (max-width: 600px) {
+
+  .eligibility-result {
+    width: 95%;
+    padding: 22px;
+  }
+
+  .eligibility-result h2 {
+    font-size: 22px;
+  }
+
+  .eligibility-result h3 {
+    font-size: 19px;
+  }
+
+  .eligibility-result p {
+    font-size: 14px;
+  }
+}
+/* ============================= */
+/* SCHEME CARD ICON */
+/* ============================= */
+
+.scheme-card-icon {
+  font-size: 42px;
+  margin-bottom: 12px;
+}
+
+
+/* ============================= */
+/* ELIGIBILITY ICON */
+/* ============================= */
+
+.eligibility-icon {
+  font-size: 20px;
+  margin-right: 8px;
+}
+
+
+/* ============================= */
+/* ELIGIBILITY RESULT */
+/* ============================= */
+
+.eligibility-result {
+  width: 100%;
+  max-width: 550px;
+
+  margin: 30px auto;
+  padding: 30px;
+
+  background: white;
+
+  border: 1px solid #d1d5db;
+  border-radius: 15px;
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.10);
+
+  box-sizing: border-box;
+}
+
+
+/* Heading */
+
+.eligibility-result h2 {
+  text-align: center;
+
+  color: #166534;
+
+  font-size: 26px;
+
+  margin-bottom: 20px;
+}
+
+
+/* Scheme Name */
+
+.eligibility-result h3 {
+  text-align: center;
+
+  color: #1f2937;
+
+  font-size: 22px;
+
+  margin-bottom: 25px;
+}
+
+
+/* Paragraph */
+
+.eligibility-result p {
+  color: #4b5563;
+
+  font-size: 16px;
+
+  line-height: 1.6;
+
+  margin-bottom: 15px;
+}
+
+
+/* Strong */
+
+.eligibility-result strong {
+  color: #1f2937;
+}
+
+
+/* Preliminary Match */
+
+.eligibility-status {
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 14px;
+
+  margin: 20px 0;
+
+  background: #fff7ed;
+
+  border: 1px solid #fed7aa;
+
+  border-left: 4px solid #f59e0b;
+
+  border-radius: 8px;
+
+  color: #92400e;
+
+  font-weight: bold;
+
+  box-sizing: border-box;
+}
+
+
+/* Close Button */
+
+.eligibility-result button {
+  width: 100%;
+
+  margin-top: 10px;
+
+  padding: 13px 20px;
+
+  background: #166534;
+
+  color: white;
+
+  border: none;
+
+  border-radius: 8px;
+
+  font-size: 16px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.eligibility-result button:hover {
+  background: #14532d;
+
+  transform: none;
+}
+
+
+/* ============================= */
+/* IMPORTANT NOTICE */
+/* ============================= */
+
+.scheme-note {
+  width: 100%;
+  max-width: 1000px;
+
+  margin: 30px 0 20px;
+
+  padding: 22px 25px;
+
+  background: #fffaf0;
+
+  border: 1px solid #f3d08a;
+
+  border-left: 5px solid #d97706;
+
+  border-radius: 10px;
+
+  box-sizing: border-box;
+}
+
+
+.scheme-note-title {
+  color: #92400e;
+
+  font-size: 18px;
+
+  font-weight: 700;
+
+  margin-bottom: 12px;
+}
+
+
+.scheme-note p {
+  color: #5f5135;
+
+  font-size: 15px;
+
+  line-height: 1.6;
+
+  margin-bottom: 8px;
+}
+
+
+.scheme-note p:last-child {
+  margin-bottom: 0;
+}
+
+
+/* ============================= */
+/* MOBILE */
+/* ============================= */
+
+@media (max-width: 600px) {
+
+  .eligibility-result {
+    width: 95%;
+
+    padding: 22px;
+  }
+
+  .eligibility-result h2 {
+    font-size: 22px;
+  }
+
+  .eligibility-result h3 {
+    font-size: 19px;
+  }
+
+  .eligibility-result p {
+    font-size: 14px;
+  }
+
+  .scheme-note {
+    padding: 18px;
+  }
+
+  .scheme-note-title {
+    font-size: 16px;
+  }
+
+  .scheme-note p {
+    font-size: 14px;
+  }
+}
+/* =========================================================
+   FINAL REPORT PAGE - COMPLETE CSS
+========================================================= */
+
+.report-page {
+  min-height: 100vh;
+  width: 100%;
+  padding: 50px 25px 70px;
+  background: linear-gradient(135deg, #f4f8f6, #eaf4ee);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Arial, sans-serif;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.report-header {
+  width: 100%;
+  max-width: 900px;
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.report-icon {
+  font-size: 55px;
+  margin-bottom: 12px;
+}
+
+.report-header h1 {
+  margin: 0 0 12px;
+  color: #166534;
+  font-size: 38px;
+  font-weight: 700;
+}
+
+.report-header p {
+  margin: 0 auto;
+  max-width: 750px;
+  color: #52635a;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+/* =========================================================
+   REPORT CARD
+========================================================= */
+
+.report-card {
+  width: 100%;
+  max-width: 1000px;
+  background: white;
+  padding: 30px;
+  margin-bottom: 22px;
+  border-radius: 18px;
+  border: 1px solid #dce8df;
+  box-shadow: 0 8px 25px rgba(22, 101, 52, 0.08);
+  box-sizing: border-box;
+}
+
+.report-card h2 {
+  margin: 0 0 22px;
+  color: #166534;
+  font-size: 24px;
+  border-bottom: 2px solid #e8f5ec;
+  padding-bottom: 12px;
+}
+
+/* =========================================================
+   ENTREPRENEUR PROFILE
+========================================================= */
+
+.profile-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.profile-grid div {
+  background: #f7faf8;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #e1ebe4;
+}
+
+.profile-grid span,
+.report-grid span {
+  display: block;
+  margin-bottom: 8px;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.profile-grid strong {
+  display: block;
+  color: #1f2937;
+  font-size: 17px;
+}
+
+/* =========================================================
+   REPORT INFORMATION GRID
+========================================================= */
+
+.report-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.report-grid div {
+  background: #f7faf8;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #e1ebe4;
+  min-height: 90px;
+}
+
+.report-grid strong {
+  display: block;
+  color: #166534;
+  font-size: 19px;
+  line-height: 1.4;
+}
+
+/* =========================================================
+   RECOMMENDATION BOX
+========================================================= */
+
+.recommendation-box {
+  background: #ecfdf5;
+  border-left: 5px solid #166534;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.recommendation-box h3 {
+  margin: 0 0 10px;
+  color: #166534;
+  font-size: 23px;
+}
+
+.recommendation-box p {
+  margin: 0;
+  color: #374151;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   ACTION PLAN
+========================================================= */
+
+.action-list {
+  margin: 0;
+  padding-left: 25px;
+  color: #374151;
+}
+
+.action-list li {
+  margin-bottom: 15px;
+  padding-left: 5px;
+  line-height: 1.6;
+}
+
+.action-list li::marker {
+  color: #166534;
+  font-weight: bold;
+}
+
+/* =========================================================
+   IMPORTANT NOTE
+========================================================= */
+
+.report-note {
+  width: 100%;
+  max-width: 1000px;
+  margin: 5px 0 25px;
+  padding: 18px 22px;
+  background: #fffbeb;
+  border-left: 5px solid #d97706;
+  border-radius: 10px;
+  color: #59491e;
+  line-height: 1.6;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.report-note strong {
+  color: #92400e;
+}
+
+/* =========================================================
+   BUTTON AREA
+========================================================= */
+
+.report-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 5px;
+  margin-bottom: 20px;
+}
+
+.report-buttons button {
+  padding: 14px 30px;
+  border: none;
+  border-radius: 10px;
+  background: #166534;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.report-buttons button:hover {
+  background: #0f4f27;
+  transform: translateY(-2px);
+}
+
+/* Continue / Back button if outside report-buttons */
+
+.report-page > button {
+  padding: 14px 30px;
+  border: none;
+  border-radius: 10px;
+  background: #166534;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.report-page > button:hover {
+  background: #0f4f27;
+  transform: translateY(-2px);
+}
+
+/* =========================================================
+   MOBILE RESPONSIVE
+========================================================= */
+
+@media (max-width: 800px) {
+
+  .report-page {
+    padding: 35px 15px 50px;
+  }
+
+  .report-header h1 {
+    font-size: 30px;
+  }
+
+  .report-header p {
+    font-size: 16px;
+  }
+
+  .report-card {
+    padding: 22px;
+  }
+
+  .report-card h2 {
+    font-size: 21px;
+  }
+
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .report-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 500px) {
+
+  .report-page {
+    padding: 25px 12px 40px;
+  }
+
+  .report-icon {
+    font-size: 45px;
+  }
+
+  .report-header h1 {
+    font-size: 26px;
+  }
+
+  .report-card {
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  .report-card h2 {
+    font-size: 19px;
+  }
+
+  .profile-grid div,
+  .report-grid div {
+    padding: 16px;
+  }
+
+  .recommendation-box h3 {
+    font-size: 20px;
+  }
+
+  .report-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .report-buttons button,
+  .report-page > button {
+    width: 100%;
+  }
+
+  .report-note {
+    font-size: 14px;
+    padding: 15px 17px;
+  }
+}
