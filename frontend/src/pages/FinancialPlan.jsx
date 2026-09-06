@@ -7,6 +7,7 @@ function FinancialPlan() {
   const { text } = useLanguage();
 
   const [user, setUser] = useState({});
+
   const [form, setForm] = useState({
     equipment: "",
     setup: "",
@@ -79,166 +80,263 @@ function FinancialPlan() {
   return (
     <div className="financial-page">
 
+      {/* Header */}
       <div className="financial-header">
-        <div className="financial-icon">💰</div>
+
+        <div className="financial-icon">
+          💰
+        </div>
+
+        <div className="financial-badge">
+          Financial Planning Assistant
+        </div>
 
         <h1>{text.financialPlanTitle}</h1>
 
         <p>{text.financialPlanDescription}</p>
 
         {user.business && (
-          <h2>
-            {text.businessInterest}: {user.business}
-          </h2>
+          <div className="financial-business">
+            <span>{text.businessInterest}</span>
+            <strong>{user.business}</strong>
+          </div>
         )}
+
       </div>
 
+      {/* Financial Form */}
       <form
         className="financial-form"
         onSubmit={calculatePlan}
       >
 
-        <div className="financial-input-group">
-          <label>
-            {text.equipmentCost}
-          </label>
+        <div className="financial-form-header">
+          <h2>Project Cost Details</h2>
 
-          <input
-            type="number"
-            name="equipment"
-            value={form.equipment}
-            onChange={handleChange}
-            min="0"
-            placeholder="₹ 0"
-          />
+          <p>
+            Enter approximate costs to estimate your
+            financial requirement.
+          </p>
         </div>
 
-        <div className="financial-input-group">
-          <label>
-            {text.setupCost}
-          </label>
+        <div className="financial-input-grid">
 
-          <input
-            type="number"
-            name="setup"
-            value={form.setup}
-            onChange={handleChange}
-            min="0"
-            placeholder="₹ 0"
-          />
-        </div>
+          <div className="financial-input-group">
+            <label>{text.equipmentCost}</label>
 
-        <div className="financial-input-group">
-          <label>
-            {text.workingCapital}
-          </label>
+            <div className="input-with-symbol">
+              <span>₹</span>
 
-          <input
-            type="number"
-            name="workingCapital"
-            value={form.workingCapital}
-            onChange={handleChange}
-            min="0"
-            placeholder="₹ 0"
-          />
-        </div>
+              <input
+                type="number"
+                name="equipment"
+                value={form.equipment}
+                onChange={handleChange}
+                min="0"
+                placeholder="0"
+              />
+            </div>
+          </div>
 
-        <div className="financial-input-group">
-          <label>
-            {text.otherExpenses}
-          </label>
+          <div className="financial-input-group">
+            <label>{text.setupCost}</label>
 
-          <input
-            type="number"
-            name="otherExpenses"
-            value={form.otherExpenses}
-            onChange={handleChange}
-            min="0"
-            placeholder="₹ 0"
-          />
-        </div>
+            <div className="input-with-symbol">
+              <span>₹</span>
 
-        <div className="financial-input-group">
-          <label>
-            {text.ownContribution}
-          </label>
+              <input
+                type="number"
+                name="setup"
+                value={form.setup}
+                onChange={handleChange}
+                min="0"
+                placeholder="0"
+              />
+            </div>
+          </div>
 
-          <input
-            type="number"
-            name="ownContribution"
-            value={form.ownContribution}
-            onChange={handleChange}
-            min="0"
-            placeholder="₹ 0"
-          />
+          <div className="financial-input-group">
+            <label>{text.workingCapital}</label>
+
+            <div className="input-with-symbol">
+              <span>₹</span>
+
+              <input
+                type="number"
+                name="workingCapital"
+                value={form.workingCapital}
+                onChange={handleChange}
+                min="0"
+                placeholder="0"
+              />
+            </div>
+          </div>
+
+          <div className="financial-input-group">
+            <label>{text.otherExpenses}</label>
+
+            <div className="input-with-symbol">
+              <span>₹</span>
+
+              <input
+                type="number"
+                name="otherExpenses"
+                value={form.otherExpenses}
+                onChange={handleChange}
+                min="0"
+                placeholder="0"
+              />
+            </div>
+          </div>
+
+          <div className="financial-input-group own-contribution-group">
+            <label>{text.ownContribution}</label>
+
+            <div className="input-with-symbol">
+              <span>₹</span>
+
+              <input
+                type="number"
+                name="ownContribution"
+                value={form.ownContribution}
+                onChange={handleChange}
+                min="0"
+                placeholder="0"
+              />
+            </div>
+
+            <small>
+              Based on the budget you entered earlier.
+            </small>
+          </div>
+
         </div>
 
         <button
           type="submit"
-          className="continue-button"
+          className="calculate-button"
         >
           {text.calculatePlan}
+          <span> →</span>
         </button>
 
       </form>
 
+      {/* Financial Summary */}
       {result && (
         <div className="financial-summary">
 
-          <h2>{text.financialSummary}</h2>
-
-          <div className="summary-item">
-            <span>
-              {text.totalProjectCost}
-            </span>
-
-            <strong>
-              ₹
-              {result.totalProjectCost.toLocaleString(
-                "en-IN"
-              )}
-            </strong>
+          <div className="summary-header">
+            <div>
+              <span>📊</span>
+              <h2>{text.financialSummary}</h2>
+            </div>
           </div>
 
-          <div className="summary-item">
-            <span>
-              {text.ownContribution}
-            </span>
+          <div className="summary-grid">
 
-            <strong>
-              ₹
-              {result.ownContribution.toLocaleString(
-                "en-IN"
-              )}
-            </strong>
+            <div className="summary-card">
+              <span>🏗️</span>
+
+              <small>
+                {text.totalProjectCost}
+              </small>
+
+              <strong>
+                ₹{result.totalProjectCost.toLocaleString("en-IN")}
+              </strong>
+            </div>
+
+            <div className="summary-card">
+              <span>👤</span>
+
+              <small>
+                {text.ownContribution}
+              </small>
+
+              <strong>
+                ₹{result.ownContribution.toLocaleString("en-IN")}
+              </strong>
+            </div>
+
+            <div className="summary-card funding-card">
+              <span>🏦</span>
+
+              <small>
+                {text.estimatedFundingGap}
+              </small>
+
+              <strong>
+                ₹{result.fundingGap.toLocaleString("en-IN")}
+              </strong>
+            </div>
+
           </div>
 
-          <div className="summary-item">
-            <span>
-              {text.estimatedFundingGap}
-            </span>
+          {/* Cost Breakdown */}
+          <div className="financial-breakdown">
 
-            <strong>
-              ₹
-              {result.fundingGap.toLocaleString(
-                "en-IN"
-              )}
-            </strong>
+            <h3>Cost Breakdown</h3>
+
+            <div className="breakdown-row">
+              <span>{text.equipmentCost}</span>
+
+              <strong>
+                ₹{result.equipment.toLocaleString("en-IN")}
+              </strong>
+            </div>
+
+            <div className="breakdown-row">
+              <span>{text.setupCost}</span>
+
+              <strong>
+                ₹{result.setup.toLocaleString("en-IN")}
+              </strong>
+            </div>
+
+            <div className="breakdown-row">
+              <span>{text.workingCapital}</span>
+
+              <strong>
+                ₹{result.workingCapital.toLocaleString("en-IN")}
+              </strong>
+            </div>
+
+            <div className="breakdown-row">
+              <span>{text.otherExpenses}</span>
+
+              <strong>
+                ₹{result.otherExpenses.toLocaleString("en-IN")}
+              </strong>
+            </div>
+
           </div>
 
         </div>
       )}
 
+      {/* Important Note */}
       <div className="financial-note">
-        <strong>ℹ️</strong>{" "}
-        {text.financialNote}
+
+        <span>ℹ️</span>
+
+        <div>
+          <strong>Financial Estimate</strong>
+
+          <p>
+            {text.financialNote}
+          </p>
+        </div>
+
       </div>
 
+      {/* Continue */}
       <button
-        className="continue-button"
+        className="financial-button"
         onClick={() => navigate("/schemes")}
       >
         {text.viewFinancingOptions}
+        <span> →</span>
       </button>
 
     </div>

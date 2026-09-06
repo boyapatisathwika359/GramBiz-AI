@@ -12,10 +12,39 @@ function Recommendations() {
     const user =
       JSON.parse(localStorage.getItem("grambizUser")) || {};
 
+    const analysis =
+      JSON.parse(localStorage.getItem("grambizAnalysis")) || {};
+
+    /*
+     * First priority:
+     * Use the recommendation returned by FastAPI.
+     */
+    if (analysis.recommendation) {
+      const backendRecommendation = {
+        name: analysis.recommendation,
+        investment: Number(
+          analysis.estimated_investment || user.budget || 0
+        ),
+        score: Number(analysis.match_score || 0),
+        demand: analysis.demand || "High",
+        competition: analysis.competition || "Medium",
+        risk: analysis.risk || "Medium"
+      };
+
+      setRecommendations([backendRecommendation]);
+      return;
+    }
+
+    /*
+     * Fallback:
+     * Existing frontend recommendation logic.
+     */
     const skills = user.skills || [];
     const resources = user.resources || [];
     const budget = Number(user.budget || 0);
-    const businessInterest = (user.business || "").toLowerCase();
+    const businessInterest = (
+      user.business || ""
+    ).toLowerCase();
 
     const businesses = [
       {
@@ -65,7 +94,12 @@ function Recommendations() {
         investment: 60000,
         skills: ["Digital Services"],
         resources: ["Computer", "Shop"],
-        keywords: ["digital", "computer", "online", "service"]
+        keywords: [
+          "digital",
+          "computer",
+          "online",
+          "service"
+        ]
       }
     ];
 
@@ -86,7 +120,9 @@ function Recommendations() {
 
       if (budget >= business.investment) {
         score += 20;
-      } else if (budget >= business.investment * 0.6) {
+      } else if (
+        budget >= business.investment * 0.6
+      ) {
         score += 10;
       }
 
@@ -102,9 +138,13 @@ function Recommendations() {
       };
     });
 
-    scoredBusinesses.sort((a, b) => b.score - a.score);
+    scoredBusinesses.sort(
+      (a, b) => b.score - a.score
+    );
 
-    setRecommendations(scoredBusinesses.slice(0, 3));
+    setRecommendations(
+      scoredBusinesses.slice(0, 3)
+    );
   }, []);
 
   const getSuitability = (score) => {
@@ -122,82 +162,215 @@ function Recommendations() {
   return (
     <div className="recommendations-page">
 
+      {/* Header */}
       <div className="recommendations-header">
-        <div className="recommendations-icon">💡</div>
 
-        <h1>{text.recommendationsTitle}</h1>
+        <div className="recommendations-icon">
+          💡
+        </div>
+
+        <div className="recommendations-badge">
+          AI-Powered Business Matching
+        </div>
+
+        <h1>
+          {text.recommendationsTitle}
+        </h1>
 
         <p>
           {text.recommendationsDescription}
         </p>
+
       </div>
 
+      {/* Recommendations */}
       <div className="recommendations-list">
 
         {recommendations.length === 0 ? (
-          <div className="recommendation-card">
-            <h2>{text.noRecommendation}</h2>
+          <div className="recommendation-empty">
+
+            <div className="empty-icon">
+              🔍
+            </div>
+
+            <h2>
+              {text.noRecommendation}
+            </h2>
 
             <p>
               {text.recommendationHelp}
             </p>
+
           </div>
         ) : (
-          recommendations.map((business, index) => (
-            <div
-              className="recommendation-card"
-              key={business.name}
-            >
-              <div className="recommendation-rank">
-                #{index + 1}
+          recommendations.map(
+            (business, index) => (
+
+              <div
+                className={`recommendation-card ${
+                  index === 0
+                    ? "top-recommendation"
+                    : ""
+                }`}
+                key={business.name}
+              >
+
+                {/* Top row */}
+                <div className="recommendation-top">
+
+                  <div className="recommendation-rank">
+                    #{index + 1}
+                  </div>
+
+                  {index === 0 && (
+                    <div className="best-match">
+                      ⭐ Best Match
+                    </div>
+                  )}
+
+                </div>
+
+                {/* Business name */}
+                <h2>
+                  {business.name}
+                </h2>
+
+                {/* Suitability */}
+                <div className="suitability">
+                  {getSuitability(
+                    business.score
+                  )}
+                </div>
+
+                {/* Match score */}
+                <div className="match-section">
+
+                  <div className="match-header">
+                    <span>
+                      {text.matchScore}
+                    </span>
+
+                    <strong>
+                      {business.score}%
+                    </strong>
+                  </div>
+
+                  <div className="match-bar">
+                    <div
+                      className="match-fill"
+                      style={{
+                        width: `${business.score}%`
+                      }}
+                    />
+                  </div>
+
+                </div>
+
+                {/* Details */}
+                <div className="recommendation-details">
+
+                  <div className="detail-box">
+
+                    <span className="detail-icon">
+                      💰
+                    </span>
+
+                    <div>
+                      <small>
+                        {text.estimatedInvestment}
+                      </small>
+
+                      <strong>
+                        ₹
+                        {business.investment.toLocaleString(
+                          "en-IN"
+                        )}
+                      </strong>
+                    </div>
+
+                  </div>
+
+                  <div className="detail-box">
+
+                    <span className="detail-icon">
+                      🎯
+                    </span>
+
+                    <div>
+                      <small>
+                        {text.whyOption}
+                      </small>
+
+                      <strong>
+                        {text.personalizedRecommendation}
+                      </strong>
+                    </div>
+
+                  </div>
+
+                </div>
+
+                {/* Backend market information */}
+                {business.demand && (
+                  <div className="backend-insights">
+
+                    <div>
+                      <span>📈 Demand</span>
+                      <strong>
+                        {business.demand}
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span>🏪 Competition</span>
+                      <strong>
+                        {business.competition}
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span>⚠️ Risk</span>
+                      <strong>
+                        {business.risk}
+                      </strong>
+                    </div>
+
+                  </div>
+                )}
+
               </div>
-
-              <h2>{business.name}</h2>
-
-              <div className="suitability">
-                {getSuitability(business.score)}
-              </div>
-
-              <div className="recommendation-details">
-
-                <p>
-                  <strong>
-                    {text.estimatedInvestment}:
-                  </strong>{" "}
-                  ₹{business.investment.toLocaleString("en-IN")}
-                </p>
-
-                <p>
-                  <strong>
-                    {text.matchScore}:
-                  </strong>{" "}
-                  {business.score}%
-                </p>
-
-                <p>
-                  <strong>
-                    {text.whyOption}:
-                  </strong>{" "}
-                  {text.personalizedRecommendation}
-                </p>
-
-              </div>
-            </div>
-          ))
+            )
+          )
         )}
 
       </div>
 
+      {/* Note */}
       <div className="recommendation-note">
-        <strong>ℹ️</strong>{" "}
-        {text.recommendationNote}
+
+        <span>ℹ️</span>
+
+        <div>
+          <strong>
+            Decision Support
+          </strong>
+
+          <p>
+            {text.recommendationNote}
+          </p>
+        </div>
+
       </div>
 
+      {/* Continue */}
       <button
-        className="continue-button"
-        onClick={() => navigate("/market-analysis")}
+        className="recommendations-button"
+        onClick={() =>
+          navigate("/market-analysis")
+        }
       >
         {text.viewMarketAnalysis}
+        <span> →</span>
       </button>
 
     </div>
