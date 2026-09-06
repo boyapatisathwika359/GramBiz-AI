@@ -499,3 +499,232 @@
     text-align: center;
   }
 }
+/* =========================================
+   HYPER-LOCAL MARKET ANALYSIS
+========================================= */
+
+.market-score-card {
+  width: 90%;
+  max-width: 1100px;
+  margin: 35px auto 25px;
+  padding: 28px 35px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(50, 100, 80, 0.15);
+  border-radius: 22px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.market-score-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 18px;
+  background: #e9f7ef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  flex-shrink: 0;
+}
+
+.market-score-label {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #58706a;
+  margin-bottom: 5px;
+}
+
+.market-score-value {
+  font-size: 38px;
+  font-weight: 800;
+  color: #126b43;
+  margin-bottom: 5px;
+}
+
+.market-score-card p {
+  margin: 5px 0 0;
+  color: #5d6965;
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   MARKET DATA STATUS
+========================================= */
+
+.market-data-status {
+  width: 90%;
+  max-width: 1100px;
+  margin: 20px auto 30px;
+  padding: 18px 25px;
+  background: #f4fbf7;
+  border-left: 5px solid #219653;
+  border-radius: 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.market-data-status > span {
+  font-size: 22px;
+}
+
+.market-data-status strong {
+  display: block;
+  color: #174f38;
+  font-size: 17px;
+  margin-bottom: 4px;
+}
+
+.market-data-status p {
+  margin: 0;
+  color: #5c6864;
+  font-size: 14px;
+}
+
+
+/* =========================================
+   MARKET NOTES
+========================================= */
+
+.market-note {
+  width: 90%;
+  max-width: 1100px;
+  margin: 25px auto;
+  padding: 20px 25px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(50, 100, 80, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.market-note > span {
+  font-size: 25px;
+  flex-shrink: 0;
+}
+
+.market-note strong {
+  display: block;
+  color: #174f38;
+  font-size: 17px;
+  margin-bottom: 7px;
+}
+
+.market-note p {
+  margin: 0;
+  color: #5b6763;
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   MARKET FACTOR CARDS
+========================================= */
+
+.market-grid {
+  width: 90%;
+  max-width: 1100px;
+  margin: 30px auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+}
+
+.market-card {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(50, 100, 80, 0.12);
+  border-radius: 22px;
+  padding: 28px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.07);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.market-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.market-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.market-card-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 15px;
+  background: #edf8f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 27px;
+}
+
+.market-card-label {
+  padding: 7px 13px;
+  background: #f3f6f4;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #60706b;
+}
+
+.market-card h3 {
+  margin: 0 0 10px;
+  color: #173f30;
+  font-size: 22px;
+}
+
+.market-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: #126b43;
+  margin-bottom: 10px;
+}
+
+.market-card p {
+  margin: 0;
+  color: #65716d;
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   MOBILE RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+
+  .market-score-card {
+    width: 86%;
+    padding: 22px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .market-score-value {
+    font-size: 32px;
+  }
+
+  .market-data-status,
+  .market-note {
+    width: 86%;
+  }
+
+  .market-grid {
+    width: 86%;
+    grid-template-columns: 1fr;
+  }
+
+  .market-card {
+    padding: 22px;
+  }
+}

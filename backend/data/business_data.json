@@ -1,0 +1,102 @@
+[
+  {
+    "name": "Tailoring",
+    "category": "Tailoring",
+    "skills": ["Tailoring"],
+    "resources": ["Sewing Machine", "Shop"],
+    "investment": 50000,
+    "demand": "High",
+    "competition": "Medium",
+    "risk": "Low"
+  },
+  {
+    "name": "Dairy Farming",
+    "category": "Farming",
+    "skills": ["Dairy", "Farming"],
+    "resources": ["Livestock", "Land", "Storage Space"],
+    "investment": 80000,
+    "demand": "High",
+    "competition": "Medium",
+    "risk": "Medium"
+  },
+  {
+    "name": "Food Processing",
+    "category": "Food",
+    "skills": ["Cooking"],
+    "resources": ["Kitchen Equipment", "Storage Space"],
+    "investment": 70000,
+    "demand": "High",
+    "competition": "Medium",
+    "risk": "Medium"
+  },
+  {
+    "name": "Poultry Farming",
+    "category": "Farming",
+    "skills": ["Farming"],
+    "resources": ["Land", "Storage Space"],
+    "investment": 70000,
+    "demand": "High",
+    "competition": "Medium",
+    "risk": "Medium"
+  },
+  {
+    "name": "Mobile Repair",
+    "category": "Repair",
+    "skills": ["Repair"],
+    "resources": ["Shop"],
+    "investment": 40000,
+    "demand": "High",
+    "competition": "Medium",
+    "risk": "Low"
+  },
+  {
+    "name": "Handicrafts",
+    "category": "Handicrafts",
+    "skills": ["Handicrafts"],
+    "resources": ["Storage Space", "Shop"],
+    "investment": 30000,
+    "demand": "Medium",
+    "competition": "Medium",
+    "risk": "Low"
+  },
+  {
+    "name": "Digital Service Center",
+    "category": "Digital Services",
+    "skills": ["Digital Services"],
+    "resources": ["Computer", "Shop"],
+    "investment": 60000,
+    "demand": "High",
+    "competition": "Medium",
+    "risk": "Low"
+  },
+  {
+    "name": "Vegetable Farming",
+    "category": "Farming",
+    "skills": ["Farming"],
+    "resources": ["Land", "Storage Space"],
+    "investment": 50000,
+    "demand": "High",
+    "competition": "Medium",
+    "risk": "Medium"
+  },
+  {
+    "name": "Small Grocery Store",
+    "category": "Retail",
+    "skills": ["Retail"],
+    "resources": ["Shop", "Storage Space"],
+    "investment": 100000,
+    "demand": "High",
+    "competition": "High",
+    "risk": "Medium"
+  },
+  {
+    "name": "Tiffin/Food Business",
+    "category": "Food",
+    "skills": ["Cooking"],
+    "resources": ["Kitchen Equipment", "Shop"],
+    "investment": 40000,
+    "demand": "High",
+    "competition": "Medium",
+    "risk": "Medium"
+  }
+]

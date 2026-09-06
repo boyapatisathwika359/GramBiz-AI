@@ -3280,3 +3280,116 @@
     align-items: flex-start;
   }
 }
+/* =========================================
+   MARKET ANALYSIS - NEW SECTIONS
+========================================= */
+
+.market-page .market-score-card {
+  width: 90%;
+  max-width: 1100px;
+  margin: 35px auto 25px;
+  padding: 28px 35px;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 1px solid #dcebe1;
+  border-radius: 22px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.market-page .market-score-icon {
+  width: 70px;
+  height: 70px;
+  min-width: 70px;
+  border-radius: 18px;
+  background: #e9f7ef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+}
+
+.market-page .market-score-label {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #58706a;
+  margin-bottom: 5px;
+}
+
+.market-page .market-score-value {
+  font-size: 38px;
+  line-height: 1.2;
+  font-weight: 800;
+  color: #126b43;
+  margin-bottom: 5px;
+}
+
+.market-page .market-score-card p {
+  margin: 5px 0 0;
+  color: #5d6965;
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   MARKET DATA STATUS
+========================================= */
+
+.market-page .market-data-status {
+  width: 90%;
+  max-width: 1100px;
+  margin: 20px auto 30px;
+  padding: 18px 25px;
+  box-sizing: border-box;
+  background: #f4fbf7;
+  border-left: 5px solid #219653;
+  border-radius: 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.market-page .market-data-status > span {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.market-page .market-data-status strong {
+  display: block;
+  color: #174f38;
+  font-size: 17px;
+  margin-bottom: 4px;
+}
+
+.market-page .market-data-status p {
+  margin: 0;
+  color: #5c6864;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+
+/* =========================================
+   MARKET SCORE RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+
+  .market-page .market-score-card {
+    width: 90%;
+    padding: 22px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .market-page .market-score-value {
+    font-size: 32px;
+  }
+
+  .market-page .market-data-status {
+    width: 90%;
+  }
+}

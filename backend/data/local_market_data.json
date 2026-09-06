@@ -1,0 +1,42 @@
+[
+  {
+    "location": "Nellore",
+    "population": "High",
+    "customer_demand": {
+      "Tailoring": "High",
+      "Dairy Farming": "High",
+      "Food Processing": "High",
+      "Poultry Farming": "Medium",
+      "Mobile Repair": "High",
+      "Handicrafts": "Medium",
+      "Digital Service Center": "High",
+      "Vegetable Farming": "High",
+      "Small Grocery Store": "High",
+      "Tiffin/Food Business": "High"
+    },
+    "competition": "Medium",
+    "transportation": "Good",
+    "raw_material_availability": "Good",
+    "seasonal_demand": "Medium"
+  },
+  {
+    "location": "Chennai",
+    "population": "High",
+    "customer_demand": {
+      "Tailoring": "High",
+      "Dairy Farming": "Medium",
+      "Food Processing": "High",
+      "Poultry Farming": "Medium",
+      "Mobile Repair": "High",
+      "Handicrafts": "Medium",
+      "Digital Service Center": "High",
+      "Vegetable Farming": "Medium",
+      "Small Grocery Store": "High",
+      "Tiffin/Food Business": "High"
+    },
+    "competition": "High",
+    "transportation": "Excellent",
+    "raw_material_availability": "Excellent",
+    "seasonal_demand": "Medium"
+  }
+]
