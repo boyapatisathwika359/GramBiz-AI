@@ -30,16 +30,37 @@ function FinalReport() {
   const recommendedBusiness =
     recommendations.length > 0
       ? recommendations[0].name
-      : user.business || text.notProvided;
+      : user.business || text.notProvided || "Not provided";
+
+  const matchScore =
+    recommendations.length > 0
+      ? recommendations[0].score || 0
+      : 0;
+
+  const totalProjectCost =
+    Number(financial.totalProjectCost || 0);
+
+  const ownContribution =
+    Number(financial.ownContribution || 0);
+
+  const fundingGap =
+    Number(financial.fundingGap || 0);
 
   return (
     <div className="report-page">
 
-      {/* HEADER */}
+      {/* =================================
+          HEADER
+      ================================= */}
+
       <div className="report-header">
 
         <div className="report-icon">
           📄
+        </div>
+
+        <div className="report-badge">
+          🤖 AI-Powered Business Advisory Report
         </div>
 
         <h1>
@@ -47,45 +68,107 @@ function FinalReport() {
         </h1>
 
         <p>
-          {text.finalReportDescription}
+          {text.finalReportDescription ||
+            "Your personalized business, market and financial guidance summary."}
         </p>
 
       </div>
 
-      {/* USER INFORMATION */}
+
+      {/* =================================
+          PROFILE
+      ================================= */}
+
       <div className="report-card">
 
-        <h2>
-          👤 {text.entrepreneurProfile}
-        </h2>
+        <div className="report-section-title">
+          <div className="section-title-icon">
+            👤
+          </div>
+
+          <div>
+            <h2>
+              {text.entrepreneurProfile}
+            </h2>
+
+            <p>
+              Entrepreneur and location details
+            </p>
+          </div>
+        </div>
 
         <div className="profile-grid">
 
-          <div>
-            <span>{text.name}</span>
+          <div className="profile-item">
+            <span>
+              👤 {text.name}
+            </span>
+
             <strong>
-              {user.name || text.notProvided}
+              {user.name ||
+                text.notProvided ||
+                "Not provided"}
             </strong>
           </div>
 
-          <div>
-            <span>{text.statePlaceholder}</span>
+          <div className="profile-item">
+            <span>
+              📍 {text.statePlaceholder}
+            </span>
+
             <strong>
-              {user.state || text.notProvided}
+              {user.state ||
+                text.notProvided ||
+                "Not provided"}
             </strong>
           </div>
 
-          <div>
-            <span>{text.districtPlaceholder}</span>
+          <div className="profile-item">
+            <span>
+              🏘️ {text.districtPlaceholder}
+            </span>
+
             <strong>
-              {user.district || text.notProvided}
+              {user.district ||
+                text.notProvided ||
+                "Not provided"}
             </strong>
           </div>
 
-          <div>
-            <span>{text.villagePlaceholder}</span>
+          <div className="profile-item">
+            <span>
+              📌 {text.villagePlaceholder}
+            </span>
+
             <strong>
-              {user.village || text.notProvided}
+              {user.village ||
+                text.notProvided ||
+                "Not provided"}
+            </strong>
+          </div>
+
+          <div className="profile-item budget-item">
+            <span>
+              💰 Available Budget
+            </span>
+
+            <strong>
+              ₹
+              {Number(
+                user.budget || 0
+              ).toLocaleString("en-IN")}
+            </strong>
+          </div>
+
+          <div className="profile-item">
+            <span>
+              💡 Business Interest
+            </span>
+
+            <strong>
+              {user.business ||
+                text.notProvided ||
+                "Not provided"}
             </strong>
           </div>
 
@@ -93,156 +176,433 @@ function FinalReport() {
 
       </div>
 
-      {/* RECOMMENDATION */}
-      <div className="report-card">
 
-        <h2>
-          💡 {text.personalizedRecommendation}
-        </h2>
+      {/* =================================
+          RECOMMENDATION
+      ================================= */}
+
+      <div className="report-card recommendation-report-card">
+
+        <div className="report-section-title">
+          <div className="section-title-icon">
+            💡
+          </div>
+
+          <div>
+            <h2>
+              {text.personalizedRecommendation}
+            </h2>
+
+            <p>
+              Best business opportunity identified
+            </p>
+          </div>
+        </div>
 
         <div className="recommendation-box">
 
-          <h3>
-            {recommendedBusiness}
-          </h3>
+          <div className="recommendation-main">
+
+            <span className="recommendation-label">
+              ⭐ Recommended Business
+            </span>
+
+            <h3>
+              {recommendedBusiness}
+            </h3>
+
+            <p>
+              {text.recommendationBasedOn ||
+                "This recommendation is based on your available budget, skills, resources and stated business interest."}
+            </p>
+
+          </div>
+
+          {matchScore > 0 && (
+            <div className="match-score-box">
+
+              <span>
+                Match Score
+              </span>
+
+              <strong>
+                {matchScore}%
+              </strong>
+
+            </div>
+          )}
+
+        </div>
+
+      </div>
+
+
+      {/* =================================
+          MARKET SUMMARY
+      ================================= */}
+
+      <div className="report-card">
+
+        <div className="report-section-title">
+
+          <div className="section-title-icon">
+            📊
+          </div>
+
+          <div>
+            <h2>
+              {text.marketSummary}
+            </h2>
+
+            <p>
+              Key local market indicators
+            </p>
+          </div>
+
+        </div>
+
+        <div className="report-grid">
+
+          <div className="report-stat">
+            <span>📈</span>
+
+            <small>
+              {text.localDemand}
+            </small>
+
+            <strong>
+              High
+            </strong>
+          </div>
+
+          <div className="report-stat">
+            <span>🏪</span>
+
+            <small>
+              {text.competition}
+            </small>
+
+            <strong>
+              Medium
+            </strong>
+          </div>
+
+          <div className="report-stat">
+            <span>🚀</span>
+
+            <small>
+              {text.opportunity}
+            </small>
+
+            <strong>
+              Good
+            </strong>
+          </div>
+
+          <div className="report-stat">
+            <span>⚠️</span>
+
+            <small>
+              {text.riskLevel}
+            </small>
+
+            <strong>
+              Medium
+            </strong>
+          </div>
+
+        </div>
+
+        <div className="market-report-note">
+          📍 Local market conditions should be validated
+          with nearby customers, competitors, suppliers
+          and current local prices.
+        </div>
+
+      </div>
+
+
+      {/* =================================
+          FINANCIAL SUMMARY
+      ================================= */}
+
+      <div className="report-card">
+
+        <div className="report-section-title">
+
+          <div className="section-title-icon">
+            💰
+          </div>
+
+          <div>
+            <h2>
+              {text.financialSummaryReport}
+            </h2>
+
+            <p>
+              Estimated project funding structure
+            </p>
+          </div>
+
+        </div>
+
+        <div className="report-grid financial-report-grid">
+
+          <div className="report-stat financial-stat">
+            <span>🏗️</span>
+
+            <small>
+              {text.totalProjectCost}
+            </small>
+
+            <strong>
+              ₹
+              {totalProjectCost.toLocaleString(
+                "en-IN"
+              )}
+            </strong>
+          </div>
+
+          <div className="report-stat financial-stat">
+            <span>👤</span>
+
+            <small>
+              {text.ownContribution}
+            </small>
+
+            <strong>
+              ₹
+              {ownContribution.toLocaleString(
+                "en-IN"
+              )}
+            </strong>
+          </div>
+
+          <div className="report-stat funding-stat">
+            <span>🏦</span>
+
+            <small>
+              {text.estimatedFundingGap}
+            </small>
+
+            <strong>
+              ₹
+              {fundingGap.toLocaleString(
+                "en-IN"
+              )}
+            </strong>
+          </div>
+
+        </div>
+
+
+        {/* COST BREAKDOWN */}
+
+        {totalProjectCost > 0 && (
+
+          <div className="report-cost-breakdown">
+
+            <h3>
+              Cost Breakdown
+            </h3>
+
+            <div className="cost-row">
+              <span>
+                Equipment
+              </span>
+
+              <strong>
+                ₹
+                {Number(
+                  financial.equipment || 0
+                ).toLocaleString("en-IN")}
+              </strong>
+            </div>
+
+            <div className="cost-row">
+              <span>
+                Setup Cost
+              </span>
+
+              <strong>
+                ₹
+                {Number(
+                  financial.setup || 0
+                ).toLocaleString("en-IN")}
+              </strong>
+            </div>
+
+            <div className="cost-row">
+              <span>
+                Working Capital
+              </span>
+
+              <strong>
+                ₹
+                {Number(
+                  financial.workingCapital || 0
+                ).toLocaleString("en-IN")}
+              </strong>
+            </div>
+
+            <div className="cost-row">
+              <span>
+                Other Expenses
+              </span>
+
+              <strong>
+                ₹
+                {Number(
+                  financial.otherExpenses || 0
+                ).toLocaleString("en-IN")}
+              </strong>
+            </div>
+
+          </div>
+
+        )}
+
+      </div>
+
+
+      {/* =================================
+          ACTION PLAN
+      ================================= */}
+
+      <div className="report-card">
+
+        <div className="report-section-title">
+
+          <div className="section-title-icon">
+            🚀
+          </div>
+
+          <div>
+            <h2>
+              {text.suggestedNextSteps}
+            </h2>
+
+            <p>
+              Recommended actions before starting
+            </p>
+          </div>
+
+        </div>
+
+        <div className="action-list">
+
+          <div className="action-item">
+            <span>1</span>
+
+            <div>
+              <strong>
+                Validate Local Demand
+              </strong>
+
+              <p>
+                {text.verifyDemand}
+              </p>
+            </div>
+          </div>
+
+          <div className="action-item">
+            <span>2</span>
+
+            <div>
+              <strong>
+                Study Competition
+              </strong>
+
+              <p>
+                {text.compareCompetitors}
+              </p>
+            </div>
+          </div>
+
+          <div className="action-item">
+            <span>3</span>
+
+            <div>
+              <strong>
+                Prepare Resources
+              </strong>
+
+              <p>
+                {text.prepareResources}
+              </p>
+            </div>
+          </div>
+
+          <div className="action-item">
+            <span>4</span>
+
+            <div>
+              <strong>
+                Review Financing
+              </strong>
+
+              <p>
+                {text.reviewFinancing}
+              </p>
+            </div>
+          </div>
+
+          <div className="action-item">
+            <span>5</span>
+
+            <div>
+              <strong>
+                Start Practically and Scale
+              </strong>
+
+              <p>
+                {text.practicalScale}
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      {/* =================================
+          DISCLAIMER
+      ================================= */}
+
+      <div className="report-note">
+
+        <div className="report-note-icon">
+          ℹ️
+        </div>
+
+        <div>
+
+          <strong>
+            Important Decision-Support Notice
+          </strong>
 
           <p>
-            {text.recommendationBasedOn}
+            {text.reportNote ||
+              "GramBiz AI provides estimates and decision-support guidance based on available information. Market conditions, costs, financing eligibility and business outcomes may vary. Verify important information with official sources and local stakeholders before making financial decisions."}
           </p>
 
         </div>
 
       </div>
 
-      {/* MARKET SUMMARY */}
-      <div className="report-card">
 
-        <h2>
-          📊 {text.marketSummary}
-        </h2>
+      {/* =================================
+          BUTTONS
+      ================================= */}
 
-        <div className="report-grid">
-
-          <div>
-            <span>{text.localDemand}</span>
-            <strong>High</strong>
-          </div>
-
-          <div>
-            <span>{text.competition}</span>
-            <strong>Medium</strong>
-          </div>
-
-          <div>
-            <span>{text.opportunity}</span>
-            <strong>Good</strong>
-          </div>
-
-        </div>
-
-      </div>
-
-      {/* FINANCIAL SUMMARY */}
-      <div className="report-card">
-
-        <h2>
-          💰 {text.financialSummaryReport}
-        </h2>
-
-        <div className="report-grid">
-
-          <div>
-            <span>
-              {text.totalProjectCost}
-            </span>
-
-            <strong>
-              ₹
-              {Number(
-                financial.totalCost || 0
-              ).toLocaleString("en-IN")}
-            </strong>
-          </div>
-
-          <div>
-            <span>
-              {text.ownContribution}
-            </span>
-
-            <strong>
-              ₹
-              {Number(
-                financial.ownContribution || 0
-              ).toLocaleString("en-IN")}
-            </strong>
-          </div>
-
-          <div>
-            <span>
-              {text.estimatedFundingGap}
-            </span>
-
-            <strong>
-              ₹
-              {Number(
-                financial.fundingGap || 0
-              ).toLocaleString("en-IN")}
-            </strong>
-          </div>
-
-        </div>
-
-      </div>
-
-      {/* ACTION PLAN */}
-      <div className="report-card">
-
-        <h2>
-          🚀 {text.suggestedNextSteps}
-        </h2>
-
-        <ol className="action-list">
-
-          <li>
-            {text.verifyDemand}
-          </li>
-
-          <li>
-            {text.compareCompetitors}
-          </li>
-
-          <li>
-            {text.prepareResources}
-          </li>
-
-          <li>
-            {text.reviewFinancing}
-          </li>
-
-          <li>
-            {text.practicalScale}
-          </li>
-
-        </ol>
-
-      </div>
-
-      {/* IMPORTANT NOTE */}
-      <div className="report-note">
-
-        <strong>
-          ℹ️ {text.reportNote}
-        </strong>
-
-      </div>
-
-      {/* BUTTON */}
       <div className="report-buttons">
 
         <button
+          className="report-home-button"
           onClick={() => navigate("/")}
         >
-          {text.backToHome}
+          ← {text.backToHome}
         </button>
 
       </div>

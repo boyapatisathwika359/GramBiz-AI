@@ -22,177 +22,123 @@ function MarketAnalysis() {
     }
   }, []);
 
+  const marketFactors = [
+    {
+      icon: "📈",
+      title: text.localDemand,
+      value: text.high || "High",
+      description:
+        text.demandDescription ||
+        "Demand appears promising based on the available business information."
+    },
+    {
+      icon: "🏪",
+      title: text.competition,
+      value: text.medium || "Medium",
+      description:
+        text.competitionDescription ||
+        "Competition should be checked with local shops and service providers."
+    },
+    {
+      icon: "🚀",
+      title: text.opportunity,
+      value: text.good || "Good",
+      description:
+        text.opportunityDescription ||
+        "There may be an opportunity if pricing, quality and customer demand are suitable."
+    },
+    {
+      icon: "⚠️",
+      title: text.riskLevel,
+      value: text.medium || "Medium",
+      description:
+        text.riskDescription ||
+        "Consider demand changes, competition, costs and available resources."
+    },
+    {
+      icon: "💰",
+      title: text.pricingGuidance,
+      value: text.localValidationRequired || "Local Validation Required",
+      description:
+        text.pricingDescription ||
+        "Compare prices from nearby businesses before finalizing your selling price."
+    }
+  ];
+
   return (
     <div className="market-page">
 
-      {/* ================= HEADER ================= */}
-
+      {/* Header */}
       <div className="market-header">
 
         <div className="market-icon">
           📊
         </div>
 
-        <h1>
-          {text.marketAnalysisTitle}
-        </h1>
+        <div className="market-badge">
+          📍 Hyper-Local Market Insights
+        </div>
 
-        <p>
-          {text.marketAnalysisDescription}
-        </p>
+        <h1>{text.marketAnalysisTitle}</h1>
 
-        <h2>
-          {business}
-        </h2>
+        <p>{text.marketAnalysisDescription}</p>
+
+        <div className="business-highlight">
+          <span>Business Being Analysed</span>
+          <strong>{business}</strong>
+        </div>
 
       </div>
 
-
-      {/* ================= MARKET CARDS ================= */}
-
+      {/* Market Factors */}
       <div className="market-grid">
 
-        {/* LOCAL DEMAND */}
+        {marketFactors.map((factor) => (
+          <div className="market-card" key={factor.title}>
 
-        <div className="market-card">
+            <div className="market-card-top">
+              <div className="market-card-icon">
+                {factor.icon}
+              </div>
 
-          <div className="market-card-icon">
-            📈
+              <div className="market-card-label">
+                Local Factor
+              </div>
+            </div>
+
+            <h3>{factor.title}</h3>
+
+            <div className="market-value">
+              {factor.value}
+            </div>
+
+            <p>{factor.description}</p>
+
           </div>
-
-          <h3>
-            {text.localDemand}
-          </h3>
-
-          <div className="market-value">
-            {text.high || "High"}
-          </div>
-
-          <p>
-            {text.demandDescription ||
-              "Demand appears promising based on the available business information."}
-          </p>
-
-        </div>
-
-
-        {/* COMPETITION */}
-
-        <div className="market-card">
-
-          <div className="market-card-icon">
-            🏪
-          </div>
-
-          <h3>
-            {text.competition}
-          </h3>
-
-          <div className="market-value">
-            {text.medium || "Medium"}
-          </div>
-
-          <p>
-            {text.competitionDescription ||
-              "Competition should be checked with local shops and service providers."}
-          </p>
-
-        </div>
-
-
-        {/* OPPORTUNITY */}
-
-        <div className="market-card">
-
-          <div className="market-card-icon">
-            🚀
-          </div>
-
-          <h3>
-            {text.opportunity}
-          </h3>
-
-          <div className="market-value">
-            {text.good || "Good"}
-          </div>
-
-          <p>
-            {text.opportunityDescription ||
-              "There may be an opportunity if pricing, quality and customer demand are suitable."}
-          </p>
-
-        </div>
-
-
-        {/* RISK LEVEL */}
-
-        <div className="market-card">
-
-          <div className="market-card-icon">
-            ⚠️
-          </div>
-
-          <h3>
-            {text.riskLevel}
-          </h3>
-
-          <div className="market-value">
-            {text.medium || "Medium"}
-          </div>
-
-          <p>
-            {text.riskDescription ||
-              "Consider demand changes, competition, costs and available resources."}
-          </p>
-
-        </div>
-
-
-        {/* PRICING GUIDANCE */}
-
-        <div className="market-card pricing-card">
-
-          <div className="market-card-icon">
-            💰
-          </div>
-
-          <h3>
-            {text.pricingGuidance}
-          </h3>
-
-          <div className="market-value">
-            {text.localValidationRequired ||
-              "Local Validation Required"}
-          </div>
-
-          <p>
-            {text.pricingDescription ||
-              "Compare prices from nearby businesses before finalizing your selling price."}
-          </p>
-
-        </div>
+        ))}
 
       </div>
 
-
-      {/* ================= IMPORTANT NOTE ================= */}
-
+      {/* Validation Note */}
       <div className="market-note">
 
-        <strong>ℹ️</strong>{" "}
+        <span>ℹ️</span>
 
-        {text.marketNote}
+        <div>
+          <strong>Important Market Validation</strong>
+
+          <p>{text.marketNote}</p>
+        </div>
 
       </div>
 
-
-      {/* ================= CONTINUE BUTTON ================= */}
-
+      {/* Continue */}
       <button
-        className="continue-button"
+        className="market-button"
         onClick={() => navigate("/financial-plan")}
       >
         {text.viewFinancialPlan}
+        <span> →</span>
       </button>
 
     </div>
