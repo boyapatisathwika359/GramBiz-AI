@@ -51,6 +51,7 @@ def normalize_text(value):
     """
     Convert a value to clean lowercase text.
     """
+
     if value is None:
         return ""
 
@@ -66,6 +67,7 @@ def clean_text(value):
     """
     Return a clean string value.
     """
+
     if value is None:
         return ""
 
@@ -84,6 +86,7 @@ def safe_float(value, default=0.0):
     """
 
     try:
+
         if value is None or pd.isna(value):
             return default
 
@@ -106,6 +109,7 @@ def safe_float(value, default=0.0):
         return float(text)
 
     except (ValueError, TypeError):
+
         return default
 
 
@@ -310,10 +314,6 @@ def load_market_factors():
 
         columns = column_name_map(df)
 
-        # -------------------------------------------------
-        # STRUCTURED TABLE FORMAT
-        # -------------------------------------------------
-
         factor_column = columns.get("factor")
 
         check_column = columns.get(
@@ -394,10 +394,6 @@ def load_market_factors():
                     }
                 )
 
-        # -------------------------------------------------
-        # FALLBACK FORMAT
-        # -------------------------------------------------
-
         else:
 
             raw_columns = list(df.columns)
@@ -437,7 +433,8 @@ def load_market_factors():
                             "status":
                                 "Data Not Available",
 
-                            "value": None,
+                            "value":
+                                None,
                         }
                     )
 
@@ -482,7 +479,8 @@ def load_market_factors():
                             "status":
                                 "Data Not Available",
 
-                            "value": None,
+                            "value":
+                                None,
                         }
                     )
 
@@ -537,18 +535,8 @@ def load_government_schemes():
     """
     Load government scheme information from Excel.
 
-    IMPORTANT:
     Government Schemes sheet has headers on the FIRST row,
     therefore header=0 is used.
-
-    Expected columns:
-
-    Scheme Name
-    Purpose
-    Suitable For
-    Eligibility
-    Documents
-    Official Source
     """
 
     try:
@@ -739,18 +727,22 @@ def load_all_data():
 
     print("========================================")
     print("EXCEL DATA LOADING COMPLETE")
+
     print(
         "Businesses:",
         len(businesses),
     )
+
     print(
         "Market Factors:",
         len(market_factors),
     )
+
     print(
         "Government Schemes:",
         len(schemes),
     )
+
     print("========================================")
     print()
 
@@ -1011,8 +1003,6 @@ def calculate_market_score(
         score += 5
 
     return min(score, 100)
-
-
 # =========================================================
 # RECOMMENDATION REASONS
 # =========================================================
@@ -1024,45 +1014,38 @@ def build_recommendation_reasons(
     budget_score,
     interest_score,
 ):
-
     reasons = []
 
     if skill_score >= 50:
-
         reasons.append(
             "Your skills match this business."
         )
 
     if resource_score >= 50:
-
         reasons.append(
             "Your available resources support "
             "this business."
         )
 
     if budget_score >= 80:
-
         reasons.append(
             "Your budget is suitable for the "
             "estimated investment."
         )
 
     elif budget_score >= 50:
-
         reasons.append(
             "Your budget partially matches the "
             "estimated investment."
         )
 
     else:
-
         reasons.append(
             "Your current budget is below the "
             "estimated investment."
         )
 
     if interest_score >= 70:
-
         reasons.append(
             "This matches your business interest."
         )
@@ -1086,13 +1069,88 @@ def build_recommendation_reasons(
         )
 
     if not reasons:
-
         reasons.append(
             "This business is included based on "
             "the available profile and market factors."
         )
 
     return reasons
+
+
+# =========================================================
+# AI-STYLE RECOMMENDATION HELPERS
+# =========================================================
+
+def get_confidence_level(score):
+    """
+    Convert recommendation score into
+    an easy-to-understand confidence level.
+    """
+
+    if score >= 80:
+        return "High"
+
+    elif score >= 60:
+        return "Medium"
+
+    return "Low"
+
+
+def get_recommendation_tier(score):
+    """
+    Classify the strength of a recommendation.
+    """
+
+    if score >= 80:
+        return "Strong Match"
+
+    elif score >= 60:
+        return "Good Match"
+
+    elif score >= 40:
+        return "Possible Match"
+
+    return "Needs More Preparation"
+
+
+def build_action_suggestions(
+    business,
+    skill_score,
+    resource_score,
+    budget_score,
+):
+    """
+    Generate simple next-step suggestions
+    from the recommendation profile.
+    """
+
+    suggestions = []
+
+    if skill_score < 50:
+        suggestions.append(
+            f"Consider basic training or skill development "
+            f"for {business['name']}."
+        )
+
+    if resource_score < 50:
+        suggestions.append(
+            "Identify or arrange the required resources "
+            "before starting."
+        )
+
+    if budget_score < 80:
+        suggestions.append(
+            "Review the funding gap and prepare a "
+            "realistic financial plan."
+        )
+
+    if not suggestions:
+        suggestions.append(
+            "Validate local customer demand and operating "
+            "costs before investing."
+        )
+
+    return suggestions
 
 
 # =========================================================
@@ -1203,6 +1261,7 @@ def analyze_business(
         request.resources,
     )
 
+
     # -----------------------------------------------------
     # CHECK BUSINESS DATA
     # -----------------------------------------------------
@@ -1240,11 +1299,13 @@ def analyze_business(
                 [],
         }
 
+
     # -----------------------------------------------------
     # SCORE ALL BUSINESSES
     # -----------------------------------------------------
 
     scored_businesses = []
+
 
     for business in BUSINESSES:
 
@@ -1255,12 +1316,14 @@ def analyze_business(
             )
         )
 
+
         resource_score = (
             calculate_resource_score(
                 request.resources,
                 business["resources"],
             )
         )
+
 
         budget_score = (
             calculate_budget_score(
@@ -1269,12 +1332,14 @@ def analyze_business(
             )
         )
 
+
         interest_score = (
             calculate_interest_score(
                 request.business,
                 business["name"],
             )
         )
+
 
         market_score = (
             calculate_market_score(
@@ -1283,6 +1348,7 @@ def analyze_business(
                 business["risk"],
             )
         )
+
 
         # -------------------------------------------------
         # WEIGHTED SCORE
@@ -1299,11 +1365,18 @@ def analyze_business(
             + market_score * 0.10
 
             + interest_score * 0.10
+
         )
 
+
         final_score = round(
-            min(final_score, 100)
+            final_score
         )
+
+
+        # -------------------------------------------------
+        # RECOMMENDATION REASONS
+        # -------------------------------------------------
 
         reasons = (
             build_recommendation_reasons(
@@ -1315,62 +1388,124 @@ def analyze_business(
             )
         )
 
-        scored_businesses.append(
-            {
 
-                "business":
-                    business["name"],
+        # -------------------------------------------------
+        # AI-STYLE CONFIDENCE
+        # -------------------------------------------------
 
-                "match_score":
-                    final_score,
-
-                "estimated_investment":
-                    business["investment"],
-
-                "demand":
-                    business["demand"],
-
-                "competition":
-                    business["competition"],
-
-                "risk":
-                    business["risk"],
-
-                "required_skills":
-                    business["skills"],
-
-                "required_resources":
-                    business["resources"],
-
-                "why_suitable":
-                    business["why_suitable"],
-
-                "reasons":
-                    reasons,
-
-                "score_breakdown":
-                    {
-
-                        "skill_score":
-                            skill_score,
-
-                        "resource_score":
-                            resource_score,
-
-                        "budget_score":
-                            budget_score,
-
-                        "market_score":
-                            market_score,
-
-                        "interest_score":
-                            interest_score,
-                    },
-            }
+        confidence = (
+            get_confidence_level(
+                final_score
+            )
         )
 
+
+        # -------------------------------------------------
+        # RECOMMENDATION TIER
+        # -------------------------------------------------
+
+        recommendation_tier = (
+            get_recommendation_tier(
+                final_score
+            )
+        )
+
+
+        # -------------------------------------------------
+        # ACTION SUGGESTIONS
+        # -------------------------------------------------
+
+        action_suggestions = (
+            build_action_suggestions(
+                business,
+                skill_score,
+                resource_score,
+                budget_score,
+            )
+        )
+
+
+        # -------------------------------------------------
+        # SCORE BREAKDOWN
+        # -------------------------------------------------
+
+        score_breakdown = {
+
+            "skill_score":
+                skill_score,
+
+            "resource_score":
+                resource_score,
+
+            "budget_score":
+                budget_score,
+
+            "market_score":
+                market_score,
+
+            "interest_score":
+                interest_score,
+
+            "final_score":
+                final_score,
+        }
+
+
+        # -------------------------------------------------
+        # BUSINESS RESULT
+        # -------------------------------------------------
+
+        scored_businesses.append({
+
+            "business":
+                business["name"],
+
+            "match_score":
+                final_score,
+
+            "confidence":
+                confidence,
+
+            "recommendation_tier":
+                recommendation_tier,
+
+            "estimated_investment":
+                business["investment"],
+
+            "required_skills":
+                business["skills"],
+
+            "required_resources":
+                business["resources"],
+
+            "demand":
+                business["demand"],
+
+            "competition":
+                business["competition"],
+
+            "risk":
+                business["risk"],
+
+            "why_suitable":
+                business["why_suitable"],
+
+            "reasons":
+                reasons,
+
+            "personalized_reasons":
+                reasons,
+
+            "action_suggestions":
+                action_suggestions,
+
+            "score_breakdown":
+                score_breakdown,
+        })
+
+
     # -----------------------------------------------------
-    # SORT RESULTS
+    # SORT BY MATCH SCORE
     # -----------------------------------------------------
 
     scored_businesses.sort(
@@ -1379,9 +1514,64 @@ def analyze_business(
         reverse=True,
     )
 
-    top_business = (
-        scored_businesses[0]
+
+    # -----------------------------------------------------
+    # TOP 5 RECOMMENDATIONS
+    # -----------------------------------------------------
+
+    top_recommendations = (
+        scored_businesses[:5]
     )
+
+
+    # -----------------------------------------------------
+    # CHECK TOP RECOMMENDATION
+    # -----------------------------------------------------
+
+    if not top_recommendations:
+
+        return {
+
+            "recommendation":
+                "No suitable business found",
+
+            "match_score":
+                0,
+
+            "estimated_investment":
+                0,
+
+            "recommendations":
+                [],
+        }
+
+
+    # -----------------------------------------------------
+    # TOP BUSINESS
+    # -----------------------------------------------------
+
+    top_business = (
+        top_recommendations[0]
+    )
+
+
+    # -----------------------------------------------------
+    # AI SUMMARY
+    # -----------------------------------------------------
+
+    ai_summary = (
+
+        f"{top_business['business']} "
+        f"is the top-ranked option with a "
+        f"{top_business['match_score']}% match "
+        f"and {top_business['confidence']} confidence. "
+
+        f"The ranking considers skills, resources, "
+        f"budget, business interest, and dataset "
+        f"market factors."
+
+    )
+
 
     # -----------------------------------------------------
     # FINAL RESPONSE
@@ -1395,132 +1585,248 @@ def analyze_business(
         "match_score":
             top_business["match_score"],
 
+        "confidence":
+            top_business["confidence"],
+
+        "recommendation_tier":
+            top_business[
+                "recommendation_tier"
+            ],
+
         "estimated_investment":
             top_business[
                 "estimated_investment"
             ],
 
+        "required_skills":
+            top_business[
+                "required_skills"
+            ],
+
+        "required_resources":
+            top_business[
+                "required_resources"
+            ],
+
         "demand":
-            top_business["demand"],
+            top_business[
+                "demand"
+            ],
 
         "competition":
-            top_business["competition"],
+            top_business[
+                "competition"
+            ],
 
         "risk":
-            top_business["risk"],
+            top_business[
+                "risk"
+            ],
+
+        "why_suitable":
+            top_business[
+                "why_suitable"
+            ],
+
+        "reasons":
+            top_business[
+                "reasons"
+            ],
+
+        "personalized_reasons":
+            top_business[
+                "personalized_reasons"
+            ],
+
+        "action_suggestions":
+            top_business[
+                "action_suggestions"
+            ],
+
+        "score_breakdown":
+            top_business[
+                "score_breakdown"
+            ],
 
         "location":
             request.location,
 
-        "message":
-            "Business analysis completed "
-            "successfully using Member 1 Excel data.",
+        "budget":
+            request.budget,
+
+        "business_interest":
+            request.business,
+
+        "user_skills":
+            request.skills,
+
+        "user_resources":
+            request.resources,
 
         "recommendations":
-            scored_businesses[:5],
+            top_recommendations,
 
-        "scoring_weights":
-            {
+        "scoring_weights": {
 
-                "skills":
-                    "30%",
+            "skills":
+                0.30,
 
-                "resources":
-                    "25%",
+            "resources":
+                0.25,
 
-                "budget":
-                    "25%",
+            "budget":
+                0.25,
 
-                "market":
-                    "10%",
+            "market":
+                0.10,
 
-                "business_interest":
-                    "10%",
-            },
+            "interest":
+                0.10,
+        },
+
+        "ai_summary":
+            ai_summary,
+
+        "ai_method":
+            "Explainable weighted recommendation "
+            "engine using structured business data; "
+            "no profit or loan approval is guaranteed.",
 
         "data_source":
-            "GramBiz_Member1_Data.xlsx",
+            "GramBiz_Member1_Data.xlsx - Business Data",
 
         "disclaimer":
-            (
-                "Recommendations are decision-support "
-                "estimates based on the available dataset. "
-                "Actual local demand, costs, competition, "
-                "risk and business performance may vary."
-            ),
+            "Recommendations are decision-support estimates "
+            "based on the available dataset and user inputs. "
+            "They do not guarantee business success, profit, "
+            "loan approval, or financial returns.",
     }
 
-    # -----------------------------------------------------
-    # TERMINAL OUTPUT
-    # -----------------------------------------------------
 
     print()
-    print("TOP RECOMMENDATIONS:")
+    print(
+        "Top recommendation:",
+        top_business["business"],
+    )
 
-    for index, item in enumerate(
-        result["recommendations"],
-        start=1,
-    ):
+    print(
+        "Match score:",
+        top_business["match_score"],
+    )
 
-        print(
-            f"{index}. "
-            f"{item['business']} - "
-            f"{item['match_score']}%"
-        )
+    print(
+        "Confidence:",
+        top_business["confidence"],
+    )
 
-    print()
+    print(
+        "Recommendation tier:",
+        top_business[
+            "recommendation_tier"
+        ],
+    )
+
     print("=================================")
     print()
 
+
     return result
-
-
 # =========================================================
-# LOCAL MARKET FACTORS
+# MARKET FACTORS
 # =========================================================
 
 @app.get("/api/market-factors")
 def get_market_factors():
 
-    return {
-
-        "message":
-            "Local market factor framework "
-            "loaded successfully.",
-
-        "data_status":
-            (
-                "Location-specific market data is "
-                "not available in the current prototype."
+    if not MARKET_FACTORS:
+        return {
+            "status": "no_data",
+            "count": 0,
+            "market_factors": [],
+            "message": (
+                "Local market factor data is not available."
             ),
+            "disclaimer": (
+                "No locality-specific values are being invented."
+            ),
+        }
 
-        "location_data_required":
-            True,
-
-        "factors":
-            MARKET_FACTORS,
+    return {
+        "status": "success",
 
         "count":
             len(MARKET_FACTORS),
 
-        "disclaimer":
-            (
-                "The current workbook defines market "
-                "factors and data sources but does not "
-                "contain verified location-specific "
-                "values. No local values are invented."
-            ),
+        "market_factors":
+            MARKET_FACTORS,
+
+        "data_coverage": {
+            "location_specific_values":
+                False,
+
+            "framework_available":
+                True,
+
+            "actual_local_values":
+                False,
+        },
+
+        "message": (
+            "Market factors are available as a "
+            "hyper-local analysis framework. "
+            "Actual locality-specific values require "
+            "validated local data."
+        ),
+
+        "disclaimer": (
+            "The listed factors describe what should "
+            "be checked for a locality. They are not "
+            "actual measured values for the user's village."
+        ),
     }
 
 
 # =========================================================
-# FINANCIAL STRUCTURING
+# FINANCIAL PLAN
 # =========================================================
 
 @app.post("/api/financial-plan")
 def create_financial_plan(
     request: FinancialRequest,
 ):
+
+    print()
+    print("=================================")
+    print(
+        "GRAMBIZ AI - FINANCIAL PLAN"
+    )
+    print("=================================")
+
+    print(
+        "Equipment:",
+        request.equipment,
+    )
+
+    print(
+        "Setup:",
+        request.setup,
+    )
+
+    print(
+        "Working Capital:",
+        request.working_capital,
+    )
+
+    print(
+        "Other Expenses:",
+        request.other_expenses,
+    )
+
+    print(
+        "Own Contribution:",
+        request.own_contribution,
+    )
+
 
     # -----------------------------------------------------
     # TOTAL PROJECT COST
@@ -1535,101 +1841,201 @@ def create_financial_plan(
         + request.working_capital
 
         + request.other_expenses
+
     )
+
+
+    total_project_cost = round(
+        total_project_cost,
+        2,
+    )
+
 
     # -----------------------------------------------------
     # FUNDING GAP
     # -----------------------------------------------------
 
     funding_gap = max(
-
         total_project_cost
         - request.own_contribution,
-
         0,
     )
 
-    # -----------------------------------------------------
-    # OWN CONTRIBUTION %
-    # -----------------------------------------------------
 
-    own_contribution_percentage = 0
+    funding_gap = round(
+        funding_gap,
+        2,
+    )
+
+
+    # -----------------------------------------------------
+    # OWN CONTRIBUTION PERCENTAGE
+    # -----------------------------------------------------
 
     if total_project_cost > 0:
 
-        own_contribution_percentage = round(
+        own_contribution_percentage = (
 
-            (
-                request.own_contribution
-                / total_project_cost
-            )
-            * 100,
+            request.own_contribution
+            / total_project_cost
 
-            2,
-        )
+        ) * 100
+
+    else:
+
+        own_contribution_percentage = 0
+
+
+    own_contribution_percentage = round(
+        min(
+            own_contribution_percentage,
+            100,
+        ),
+        2,
+    )
+
 
     # -----------------------------------------------------
     # MONTHLY SURPLUS
     # -----------------------------------------------------
 
-    estimated_monthly_surplus = None
+    monthly_surplus = None
 
-    estimated_break_even_months = None
 
     if (
-
         request.estimated_monthly_revenue > 0
-
-        and request.monthly_expenses > 0
+        or request.monthly_expenses > 0
     ):
 
-        estimated_monthly_surplus = round(
+        monthly_surplus = (
 
             request.estimated_monthly_revenue
-            - request.monthly_expenses,
+            - request.monthly_expenses
 
+        )
+
+        monthly_surplus = round(
+            monthly_surplus,
             2,
         )
 
-        # -------------------------------------------------
-        # BREAK EVEN
-        # -------------------------------------------------
-
-        if estimated_monthly_surplus > 0:
-
-            remaining_cost = max(
-
-                total_project_cost
-                - request.own_contribution,
-
-                0,
-            )
-
-            if remaining_cost > 0:
-
-                estimated_break_even_months = round(
-
-                    remaining_cost
-                    / estimated_monthly_surplus,
-
-                    2,
-                )
-
-            else:
-
-                estimated_break_even_months = 0
 
     # -----------------------------------------------------
-    # FINANCIAL RESPONSE
+    # BREAK-EVEN MONTHS
     # -----------------------------------------------------
 
-    return {
+    break_even_months = None
 
-        "total_project_cost":
+
+    if (
+        monthly_surplus is not None
+        and monthly_surplus > 0
+        and total_project_cost > 0
+    ):
+
+        break_even_months = (
+
+            total_project_cost
+            / monthly_surplus
+
+        )
+
+        break_even_months = round(
+            break_even_months,
+            2,
+        )
+
+
+    # -----------------------------------------------------
+    # FUNDING STATUS
+    # -----------------------------------------------------
+
+    if total_project_cost <= 0:
+
+        funding_status = (
+            "Project cost not provided"
+        )
+
+    elif funding_gap <= 0:
+
+        funding_status = (
+            "Fully covered"
+        )
+
+    else:
+
+        funding_status = (
+            "Additional funding required"
+        )
+
+
+    # -----------------------------------------------------
+    # COST BREAKDOWN
+    # -----------------------------------------------------
+
+    cost_breakdown = {
+
+        "equipment":
             round(
-                total_project_cost,
+                request.equipment,
                 2,
             ),
+
+        "setup":
+            round(
+                request.setup,
+                2,
+            ),
+
+        "working_capital":
+            round(
+                request.working_capital,
+                2,
+            ),
+
+        "other_expenses":
+            round(
+                request.other_expenses,
+                2,
+            ),
+
+        "total_project_cost":
+            total_project_cost,
+    }
+
+
+    # -----------------------------------------------------
+    # MESSAGE
+    # -----------------------------------------------------
+
+    if funding_gap <= 0:
+
+        message = (
+            "Your current own contribution "
+            "covers the estimated project cost."
+        )
+
+    else:
+
+        message = (
+            "Your estimated project cost is higher "
+            "than your current own contribution. "
+            "Review the funding gap and explore "
+            "appropriate financing options."
+        )
+
+
+    # -----------------------------------------------------
+    # RESPONSE
+    # -----------------------------------------------------
+
+    result = {
+
+        "status":
+            "success",
+
+        "total_project_cost":
+            total_project_cost,
 
         "own_contribution":
             round(
@@ -1641,10 +2047,10 @@ def create_financial_plan(
             own_contribution_percentage,
 
         "funding_gap":
-            round(
-                funding_gap,
-                2,
-            ),
+            funding_gap,
+
+        "funding_status":
+            funding_status,
 
         "monthly_expenses":
             round(
@@ -1658,49 +2064,47 @@ def create_financial_plan(
                 2,
             ),
 
-        "estimated_monthly_surplus":
-            estimated_monthly_surplus,
+        "monthly_surplus":
+            monthly_surplus,
 
-        "estimated_break_even_months":
-            estimated_break_even_months,
+        "break_even_months":
+            break_even_months,
 
         "cost_breakdown":
-            {
-
-                "equipment":
-                    request.equipment,
-
-                "setup":
-                    request.setup,
-
-                "working_capital":
-                    request.working_capital,
-
-                "other_expenses":
-                    request.other_expenses,
-            },
-
-        "funding_status":
-            (
-                "Fully covered by own contribution"
-                if funding_gap == 0
-                else "Additional funding may be required"
-            ),
+            cost_breakdown,
 
         "message":
-            (
-                "Financial structure calculated "
-                "using user-provided estimates."
-            ),
+            message,
 
-        "disclaimer":
-            (
-                "Financial values are estimates for "
-                "decision support only. Actual costs, "
-                "revenue, cash flow, break-even period, "
-                "and financing outcomes may vary."
-            ),
+        "disclaimer": (
+            "Financial figures are planning estimates "
+            "based on user-provided inputs. They do not "
+            "guarantee revenue, profit, break-even time, "
+            "loan approval, or financial returns."
+        ),
     }
+
+
+    print(
+        "Total project cost:",
+        total_project_cost,
+    )
+
+    print(
+        "Funding gap:",
+        funding_gap,
+    )
+
+    print(
+        "Funding status:",
+        funding_status,
+    )
+
+    print("=================================")
+    print()
+
+
+    return result
 
 
 # =========================================================
@@ -1708,28 +2112,50 @@ def create_financial_plan(
 # =========================================================
 
 @app.get("/api/schemes")
-def get_schemes():
+def get_government_schemes():
+
+    if not SCHEMES:
+
+        return {
+
+            "status":
+                "no_data",
+
+            "count":
+                0,
+
+            "schemes":
+                [],
+
+            "message":
+                "Government scheme data is not available.",
+
+            "disclaimer": (
+                "Always verify current eligibility, "
+                "conditions, and application details "
+                "from the official government source."
+            ),
+        }
+
 
     return {
 
-        "message":
-            "Government scheme information "
-            "loaded successfully.",
+        "status":
+            "success",
 
-        "scheme_count":
+        "count":
             len(SCHEMES),
 
         "schemes":
             SCHEMES,
 
-        "disclaimer":
-            (
-                "Scheme information is for guidance. "
-                "Eligibility, sanction, loan amount, "
-                "subsidy and financing decisions depend "
-                "on current official rules and the "
-                "relevant authority or lending institution."
-            ),
+        "disclaimer": (
+            "Scheme information is provided for "
+            "decision support. Eligibility, financing "
+            "amounts, approval, and other conditions "
+            "depend on the current official rules and "
+            "the relevant authority or lending institution."
+        ),
     }
 
 
@@ -1738,48 +2164,57 @@ def get_schemes():
 # =========================================================
 
 @app.get("/api/data-status")
-def get_data_status():
+def data_status():
 
     return {
 
-        "excel_file":
-            str(EXCEL_FILE),
+        "status":
+            "success",
 
-        "excel_exists":
+        "excel_file":
+            EXCEL_FILE.name,
+
+        "excel_file_exists":
             EXCEL_FILE.exists(),
 
-        "business_data":
-            {
+        "business_data": {
 
-                "loaded":
-                    bool(BUSINESSES),
+            "loaded":
+                bool(BUSINESSES),
 
-                "count":
-                    len(BUSINESSES),
-            },
+            "count":
+                len(BUSINESSES),
+        },
 
-        "market_factors":
-            {
+        "market_factors": {
 
-                "loaded":
-                    bool(MARKET_FACTORS),
+            "loaded":
+                bool(MARKET_FACTORS),
 
-                "count":
-                    len(MARKET_FACTORS),
+            "count":
+                len(MARKET_FACTORS),
+        },
 
-                "location_specific_values":
-                    False,
-            },
+        "government_schemes": {
 
-        "government_schemes":
-            {
+            "loaded":
+                bool(SCHEMES),
 
-                "loaded":
-                    bool(SCHEMES),
+            "count":
+                len(SCHEMES),
+        },
 
-                "count":
-                    len(SCHEMES),
-            },
+        "data_sources": {
+
+            "business":
+                "GramBiz_Member1_Data.xlsx - Business Data",
+
+            "market":
+                "GramBiz_Member1_Data.xlsx - Local Market Factors",
+
+            "schemes":
+                "GramBiz_Member1_Data.xlsx - Government Schemes",
+        },
     }
 
 
@@ -1794,6 +2229,7 @@ def reload_data():
     global MARKET_FACTORS
     global SCHEMES
 
+
     try:
 
         (
@@ -1802,7 +2238,11 @@ def reload_data():
             SCHEMES,
         ) = load_all_data()
 
+
         return {
+
+            "status":
+                "success",
 
             "message":
                 "Excel data reloaded successfully.",
@@ -1815,12 +2255,18 @@ def reload_data():
 
             "scheme_count":
                 len(SCHEMES),
+
+            "excel_file":
+                EXCEL_FILE.name,
         }
+
 
     except Exception as error:
 
         raise HTTPException(
+
             status_code=500,
+
             detail=(
                 "Failed to reload Excel data: "
                 f"{str(error)}"
@@ -1829,5 +2275,27 @@ def reload_data():
 
 
 # =========================================================
-# END OF FILE
+# STARTUP MESSAGE
 # =========================================================
+
+print()
+print("========================================")
+print("GRAMBIZ AI BACKEND READY")
+print("========================================")
+print(
+    "Excel file:",
+    EXCEL_FILE,
+)
+print(
+    "Businesses:",
+    len(BUSINESSES),
+)
+print(
+    "Market Factors:",
+    len(MARKET_FACTORS),
+)
+print(
+    "Government Schemes:",
+    len(SCHEMES),
+)
+print("========================================")
