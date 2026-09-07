@@ -9,6 +9,7 @@ function FinalReport() {
   const [user, setUser] = useState({});
   const [financial, setFinancial] = useState({});
   const [recommendations, setRecommendations] = useState([]);
+  const [analysis, setAnalysis] = useState({});
 
   useEffect(() => {
     const savedUser =
@@ -22,36 +23,251 @@ function FinalReport() {
         localStorage.getItem("grambizRecommendations")
       ) || [];
 
+    const savedAnalysis =
+      JSON.parse(
+        localStorage.getItem("grambizAnalysis")
+      ) || {};
+
     setUser(savedUser);
     setFinancial(savedFinancial);
     setRecommendations(savedRecommendations);
+    setAnalysis(savedAnalysis);
   }, []);
+
+  /* =========================================================
+     HELPER FUNCTIONS
+  ========================================================= */
+
+  const formatCurrency = (value) => {
+    const amount = Number(value || 0);
+
+    return `₹${amount.toLocaleString("en-IN")}`;
+  };
+
+  const displayValue = (
+    value,
+    fallback = "Not Available"
+  ) => {
+    if (
+      value === null ||
+      value === undefined ||
+      value === ""
+    ) {
+      return fallback;
+    }
+
+    return String(value)
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (letter) =>
+        letter.toUpperCase()
+      );
+  };
+
+  /* =========================================================
+     RECOMMENDED BUSINESS
+  ========================================================= */
 
   const recommendedBusiness =
     recommendations.length > 0
-      ? recommendations[0].name
-      : user.business || text.notProvided || "Not provided";
+      ? recommendations[0]?.name
+      : analysis?.recommendation ||
+        user.business ||
+        text.notProvided ||
+        "Not provided";
 
   const matchScore =
     recommendations.length > 0
-      ? recommendations[0].score || 0
-      : 0;
+      ? Number(
+          recommendations[0]?.score || 0
+        )
+      : Number(
+          analysis?.recommendation_score || 0
+        );
 
-  const totalProjectCost =
-    Number(financial.totalProjectCost || 0);
+  const recommendedDetails =
+    recommendations.length > 0
+      ? recommendations[0]
+      : null;
 
-  const ownContribution =
-    Number(financial.ownContribution || 0);
+  /* =========================================================
+     USER DETAILS
+  ========================================================= */
 
-  const fundingGap =
-    Number(financial.fundingGap || 0);
+  const userName =
+    user.name ||
+    text.notProvided ||
+    "Not provided";
+
+  const state =
+    user.state ||
+    text.notProvided ||
+    "Not provided";
+
+  const district =
+    user.district ||
+    text.notProvided ||
+    "Not provided";
+
+  const village =
+    user.village ||
+    text.notProvided ||
+    "Not provided";
+
+  const businessInterest =
+    user.business ||
+    text.notProvided ||
+    "Not provided";
+
+  const budget = Number(
+    user.budget || 0
+  );
+
+  /* =========================================================
+     MARKET DATA
+  ========================================================= */
+
+  const localDemand = displayValue(
+    analysis?.local_demand
+  );
+
+  const localCompetition = displayValue(
+    analysis?.local_competition
+  );
+
+  const localOpportunity = (() => {
+    const demand = String(
+      analysis?.local_demand || ""
+    ).toLowerCase();
+
+    const competition = String(
+      analysis?.local_competition || ""
+    ).toLowerCase();
+
+    if (
+      demand === "high" &&
+      competition === "low"
+    ) {
+      return "Excellent";
+    }
+
+    if (
+      demand === "high" &&
+      competition === "medium"
+    ) {
+      return "Good";
+    }
+
+    if (
+      demand === "medium" &&
+      competition === "low"
+    ) {
+      return "Good";
+    }
+
+    if (demand === "high") {
+      return "Moderate";
+    }
+
+    return "Needs Validation";
+  })();
+
+  const localRisk = (() => {
+    const demand = String(
+      analysis?.local_demand || ""
+    ).toLowerCase();
+
+    const competition = String(
+      analysis?.local_competition || ""
+    ).toLowerCase();
+
+    if (
+      competition === "high" &&
+      demand !== "high"
+    ) {
+      return "High";
+    }
+
+    if (competition === "high") {
+      return "Medium-High";
+    }
+
+    if (competition === "medium") {
+      return "Medium";
+    }
+
+    if (competition === "low") {
+      return "Low";
+    }
+
+    return "Needs Validation";
+  })();
+
+  /* =========================================================
+     FINANCIAL DATA
+  ========================================================= */
+
+  const totalProjectCost = Number(
+    financial.totalProjectCost || 0
+  );
+
+  const ownContribution = Number(
+    financial.ownContribution || 0
+  );
+
+  const fundingGap = Number(
+    financial.fundingGap || 0
+  );
+
+  const equipment = Number(
+    financial.equipment || 0
+  );
+
+  const setup = Number(
+    financial.setup || 0
+  );
+
+  const workingCapital = Number(
+    financial.workingCapital || 0
+  );
+
+  const otherExpenses = Number(
+    financial.otherExpenses || 0
+  );
+
+  const monthlyExpenses = Number(
+    financial.monthlyExpenses || 0
+  );
+
+  const estimatedMonthlyRevenue = Number(
+    financial.estimatedMonthlyRevenue || 0
+  );
+
+  /* =========================================================
+     SCORE DESCRIPTION
+  ========================================================= */
+
+  const getScoreDescription = () => {
+    if (matchScore >= 80) {
+      return "Strong match based on the available profile information.";
+    }
+
+    if (matchScore >= 60) {
+      return "Good match based on the available profile information.";
+    }
+
+    if (matchScore > 0) {
+      return "Moderate match. Further local validation is recommended.";
+    }
+
+    return "Recommendation score is not available.";
+  };
 
   return (
     <div className="report-page">
 
-      {/* =================================
+      {/* =====================================================
           HEADER
-      ================================= */}
+      ===================================================== */}
 
       <div className="report-header">
 
@@ -75,75 +291,70 @@ function FinalReport() {
       </div>
 
 
-      {/* =================================
+      {/* =====================================================
           PROFILE
-      ================================= */}
+      ===================================================== */}
 
       <div className="report-card">
 
         <div className="report-section-title">
+
           <div className="section-title-icon">
             👤
           </div>
 
           <div>
             <h2>
-              {text.entrepreneurProfile}
+              {text.entrepreneurProfile ||
+                "Entrepreneur Profile"}
             </h2>
 
             <p>
               Entrepreneur and location details
             </p>
           </div>
+
         </div>
 
         <div className="profile-grid">
 
           <div className="profile-item">
             <span>
-              👤 {text.name}
+              👤 {text.name || "Name"}
             </span>
 
             <strong>
-              {user.name ||
-                text.notProvided ||
-                "Not provided"}
+              {userName}
             </strong>
           </div>
 
           <div className="profile-item">
             <span>
-              📍 {text.statePlaceholder}
+              📍 {text.statePlaceholder || "State"}
             </span>
 
             <strong>
-              {user.state ||
-                text.notProvided ||
-                "Not provided"}
+              {state}
             </strong>
           </div>
 
           <div className="profile-item">
             <span>
-              🏘️ {text.districtPlaceholder}
+              🏘️ {text.districtPlaceholder || "District"}
             </span>
 
             <strong>
-              {user.district ||
-                text.notProvided ||
-                "Not provided"}
+              {district}
             </strong>
           </div>
 
           <div className="profile-item">
             <span>
-              📌 {text.villagePlaceholder}
+              📌 {text.villagePlaceholder || "Village"}
             </span>
 
             <strong>
-              {user.village ||
-                text.notProvided ||
-                "Not provided"}
+              {village}
             </strong>
           </div>
 
@@ -153,10 +364,7 @@ function FinalReport() {
             </span>
 
             <strong>
-              ₹
-              {Number(
-                user.budget || 0
-              ).toLocaleString("en-IN")}
+              {formatCurrency(budget)}
             </strong>
           </div>
 
@@ -166,9 +374,7 @@ function FinalReport() {
             </span>
 
             <strong>
-              {user.business ||
-                text.notProvided ||
-                "Not provided"}
+              {businessInterest}
             </strong>
           </div>
 
@@ -177,26 +383,30 @@ function FinalReport() {
       </div>
 
 
-      {/* =================================
+      {/* =====================================================
           RECOMMENDATION
-      ================================= */}
+      ===================================================== */}
 
       <div className="report-card recommendation-report-card">
 
         <div className="report-section-title">
+
           <div className="section-title-icon">
             💡
           </div>
 
           <div>
             <h2>
-              {text.personalizedRecommendation}
+              {text.personalizedRecommendation ||
+                "Personalized Recommendation"}
             </h2>
 
             <p>
-              Best business opportunity identified
+              Best available business opportunity
+              based on your profile
             </p>
           </div>
+
         </div>
 
         <div className="recommendation-box">
@@ -212,13 +422,22 @@ function FinalReport() {
             </h3>
 
             <p>
-              {text.recommendationBasedOn ||
-                "This recommendation is based on your available budget, skills, resources and stated business interest."}
+              {recommendedDetails?.personalized_reasons ||
+                recommendedDetails?.why_suitable ||
+                text.recommendationBasedOn ||
+                "This recommendation considers your budget, skills, resources and business interest."}
+            </p>
+
+            <p>
+              <strong>
+                {getScoreDescription()}
+              </strong>
             </p>
 
           </div>
 
           {matchScore > 0 && (
+
             <div className="match-score-box">
 
               <span>
@@ -230,16 +449,84 @@ function FinalReport() {
               </strong>
 
             </div>
+
           )}
 
         </div>
 
+        {/* RECOMMENDED BUSINESS DETAILS */}
+
+        {recommendedDetails && (
+
+          <div className="report-grid">
+
+            <div className="report-stat">
+              <span>💰</span>
+
+              <small>
+                Estimated Investment
+              </small>
+
+              <strong>
+                {formatCurrency(
+                  recommendedDetails.estimated_investment ||
+                  recommendedDetails.investment
+                )}
+              </strong>
+            </div>
+
+            <div className="report-stat">
+              <span>📈</span>
+
+              <small>
+                Demand
+              </small>
+
+              <strong>
+                {displayValue(
+                  recommendedDetails.demand
+                )}
+              </strong>
+            </div>
+
+            <div className="report-stat">
+              <span>🏪</span>
+
+              <small>
+                Competition
+              </small>
+
+              <strong>
+                {displayValue(
+                  recommendedDetails.competition
+                )}
+              </strong>
+            </div>
+
+            <div className="report-stat">
+              <span>⚠️</span>
+
+              <small>
+                Risk
+              </small>
+
+              <strong>
+                {displayValue(
+                  recommendedDetails.risk
+                )}
+              </strong>
+            </div>
+
+          </div>
+
+        )}
+
       </div>
 
 
-      {/* =================================
+      {/* =====================================================
           MARKET SUMMARY
-      ================================= */}
+      ===================================================== */}
 
       <div className="report-card">
 
@@ -251,11 +538,12 @@ function FinalReport() {
 
           <div>
             <h2>
-              {text.marketSummary}
+              {text.marketSummary ||
+                "Market Summary"}
             </h2>
 
             <p>
-              Key local market indicators
+              Available local market indicators
             </p>
           </div>
 
@@ -267,11 +555,12 @@ function FinalReport() {
             <span>📈</span>
 
             <small>
-              {text.localDemand}
+              {text.localDemand ||
+                "Local Demand"}
             </small>
 
             <strong>
-              High
+              {localDemand}
             </strong>
           </div>
 
@@ -279,11 +568,12 @@ function FinalReport() {
             <span>🏪</span>
 
             <small>
-              {text.competition}
+              {text.competition ||
+                "Competition"}
             </small>
 
             <strong>
-              Medium
+              {localCompetition}
             </strong>
           </div>
 
@@ -291,11 +581,12 @@ function FinalReport() {
             <span>🚀</span>
 
             <small>
-              {text.opportunity}
+              {text.opportunity ||
+                "Opportunity"}
             </small>
 
             <strong>
-              Good
+              {localOpportunity}
             </strong>
           </div>
 
@@ -303,28 +594,40 @@ function FinalReport() {
             <span>⚠️</span>
 
             <small>
-              {text.riskLevel}
+              {text.riskLevel ||
+                "Risk Level"}
             </small>
 
             <strong>
-              Medium
+              {localRisk}
             </strong>
           </div>
 
         </div>
 
         <div className="market-report-note">
-          📍 Local market conditions should be validated
-          with nearby customers, competitors, suppliers
-          and current local prices.
+
+          📍{" "}
+          {analysis?.market_data_status ||
+            "Local market information is based on available prototype data."}
+
+        </div>
+
+        <div className="market-report-note">
+
+          ℹ️ Local demand, competition, pricing,
+          raw-material availability and
+          transportation should be validated
+          before investment.
+
         </div>
 
       </div>
 
 
-      {/* =================================
+      {/* =====================================================
           FINANCIAL SUMMARY
-      ================================= */}
+      ===================================================== */}
 
       <div className="report-card">
 
@@ -336,7 +639,8 @@ function FinalReport() {
 
           <div>
             <h2>
-              {text.financialSummaryReport}
+              {text.financialSummaryReport ||
+                "Financial Summary"}
             </h2>
 
             <p>
@@ -349,48 +653,60 @@ function FinalReport() {
         <div className="report-grid financial-report-grid">
 
           <div className="report-stat financial-stat">
-            <span>🏗️</span>
+
+            <span>
+              🏗️
+            </span>
 
             <small>
-              {text.totalProjectCost}
+              {text.totalProjectCost ||
+                "Total Project Cost"}
             </small>
 
             <strong>
-              ₹
-              {totalProjectCost.toLocaleString(
-                "en-IN"
+              {formatCurrency(
+                totalProjectCost
               )}
             </strong>
+
           </div>
 
           <div className="report-stat financial-stat">
-            <span>👤</span>
+
+            <span>
+              👤
+            </span>
 
             <small>
-              {text.ownContribution}
+              {text.ownContribution ||
+                "Own Contribution"}
             </small>
 
             <strong>
-              ₹
-              {ownContribution.toLocaleString(
-                "en-IN"
+              {formatCurrency(
+                ownContribution
               )}
             </strong>
+
           </div>
 
           <div className="report-stat funding-stat">
-            <span>🏦</span>
+
+            <span>
+              🏦
+            </span>
 
             <small>
-              {text.estimatedFundingGap}
+              {text.estimatedFundingGap ||
+                "Estimated Funding Gap"}
             </small>
 
             <strong>
-              ₹
-              {fundingGap.toLocaleString(
-                "en-IN"
+              {formatCurrency(
+                fundingGap
               )}
             </strong>
+
           </div>
 
         </div>
@@ -407,55 +723,121 @@ function FinalReport() {
             </h3>
 
             <div className="cost-row">
+
               <span>
                 Equipment
               </span>
 
               <strong>
-                ₹
-                {Number(
-                  financial.equipment || 0
-                ).toLocaleString("en-IN")}
+                {formatCurrency(
+                  equipment
+                )}
               </strong>
+
             </div>
 
             <div className="cost-row">
+
               <span>
                 Setup Cost
               </span>
 
               <strong>
-                ₹
-                {Number(
-                  financial.setup || 0
-                ).toLocaleString("en-IN")}
+                {formatCurrency(
+                  setup
+                )}
               </strong>
+
             </div>
 
             <div className="cost-row">
+
               <span>
                 Working Capital
               </span>
 
               <strong>
-                ₹
-                {Number(
-                  financial.workingCapital || 0
-                ).toLocaleString("en-IN")}
+                {formatCurrency(
+                  workingCapital
+                )}
               </strong>
+
             </div>
 
             <div className="cost-row">
+
               <span>
                 Other Expenses
               </span>
 
               <strong>
-                ₹
-                {Number(
-                  financial.otherExpenses || 0
-                ).toLocaleString("en-IN")}
+                {formatCurrency(
+                  otherExpenses
+                )}
               </strong>
+
+            </div>
+
+            <div className="cost-row">
+
+              <span>
+                Total Project Cost
+              </span>
+
+              <strong>
+                {formatCurrency(
+                  totalProjectCost
+                )}
+              </strong>
+
+            </div>
+
+          </div>
+
+        )}
+
+
+        {/* OPTIONAL MONTHLY FIGURES */}
+
+        {(monthlyExpenses > 0 ||
+          estimatedMonthlyRevenue > 0) && (
+
+          <div className="report-grid">
+
+            <div className="report-stat">
+
+              <span>
+                📉
+              </span>
+
+              <small>
+                Estimated Monthly Expenses
+              </small>
+
+              <strong>
+                {formatCurrency(
+                  monthlyExpenses
+                )}
+              </strong>
+
+            </div>
+
+            <div className="report-stat">
+
+              <span>
+                📈
+              </span>
+
+              <small>
+                Estimated Monthly Revenue
+              </small>
+
+              <strong>
+                {formatCurrency(
+                  estimatedMonthlyRevenue
+                )}
+              </strong>
+
             </div>
 
           </div>
@@ -465,9 +847,57 @@ function FinalReport() {
       </div>
 
 
-      {/* =================================
+      {/* =====================================================
+          FUNDING INTERPRETATION
+      ===================================================== */}
+
+      <div className="report-card">
+
+        <div className="report-section-title">
+
+          <div className="section-title-icon">
+            🏦
+          </div>
+
+          <div>
+            <h2>
+              Funding Requirement
+            </h2>
+
+            <p>
+              Understanding your estimated
+              financing need
+            </p>
+          </div>
+
+        </div>
+
+        <div className="market-report-note">
+
+          {fundingGap === 0
+            ? "Your estimated project cost is fully covered by the recorded own contribution."
+            : `The estimated funding gap is ${formatCurrency(
+                fundingGap
+              )}. You can review suitable financing options and verify eligibility with the relevant financial institution.`}
+
+        </div>
+
+        <div className="market-report-note">
+
+          ⚠️ GramBiz AI does not approve,
+          guarantee or provide loans. Financing
+          information is for decision support
+          and actual approval depends on the
+          relevant lender and applicable rules.
+
+        </div>
+
+      </div>
+
+
+      {/* =====================================================
           ACTION PLAN
-      ================================= */}
+      ===================================================== */}
 
       <div className="report-card">
 
@@ -479,11 +909,13 @@ function FinalReport() {
 
           <div>
             <h2>
-              {text.suggestedNextSteps}
+              {text.suggestedNextSteps ||
+                "Suggested Next Steps"}
             </h2>
 
             <p>
-              Recommended actions before starting
+              Recommended actions before
+              starting the business
             </p>
           </div>
 
@@ -492,73 +924,112 @@ function FinalReport() {
         <div className="action-list">
 
           <div className="action-item">
-            <span>1</span>
+
+            <span>
+              1
+            </span>
 
             <div>
+
               <strong>
                 Validate Local Demand
               </strong>
 
               <p>
-                {text.verifyDemand}
+                {text.verifyDemand ||
+                  "Talk to potential customers and validate demand in your target area."}
               </p>
+
             </div>
+
           </div>
 
+
           <div className="action-item">
-            <span>2</span>
+
+            <span>
+              2
+            </span>
 
             <div>
+
               <strong>
                 Study Competition
               </strong>
 
               <p>
-                {text.compareCompetitors}
+                {text.compareCompetitors ||
+                  "Compare nearby competitors, prices, products and services."}
               </p>
+
             </div>
+
           </div>
 
+
           <div className="action-item">
-            <span>3</span>
+
+            <span>
+              3
+            </span>
 
             <div>
+
               <strong>
                 Prepare Resources
               </strong>
 
               <p>
-                {text.prepareResources}
+                {text.prepareResources ||
+                  "Confirm that the required skills, equipment, land, shop and other resources are available."}
               </p>
+
             </div>
+
           </div>
 
+
           <div className="action-item">
-            <span>4</span>
+
+            <span>
+              4
+            </span>
 
             <div>
+
               <strong>
                 Review Financing
               </strong>
 
               <p>
-                {text.reviewFinancing}
+                {text.reviewFinancing ||
+                  "Review financing options and verify current eligibility and conditions with official sources."}
               </p>
+
             </div>
+
           </div>
 
+
           <div className="action-item">
-            <span>5</span>
+
+            <span>
+              5
+            </span>
 
             <div>
+
               <strong>
                 Start Practically and Scale
               </strong>
 
               <p>
-                {text.practicalScale}
+                {text.practicalScale ||
+                  "Start according to your validated resources and gradually scale after gaining customer feedback."}
               </p>
+
             </div>
+
           </div>
 
         </div>
@@ -566,14 +1037,79 @@ function FinalReport() {
       </div>
 
 
-      {/* =================================
+      {/* =====================================================
+          OVERALL SUMMARY
+      ===================================================== */}
+
+      <div className="report-card">
+
+        <div className="report-section-title">
+
+          <div className="section-title-icon">
+            🤖
+          </div>
+
+          <div>
+            <h2>
+              GramBiz AI Advisory Summary
+            </h2>
+
+            <p>
+              Decision-support overview
+            </p>
+          </div>
+
+        </div>
+
+        <p>
+          GramBiz AI identified{" "}
+          <strong>
+            {recommendedBusiness}
+          </strong>{" "}
+          as the top available business
+          recommendation based on the provided
+          profile information.
+        </p>
+
+        <p>
+          The estimated project cost is{" "}
+          <strong>
+            {formatCurrency(
+              totalProjectCost
+            )}
+          </strong>
+          , with an own contribution of{" "}
+          <strong>
+            {formatCurrency(
+              ownContribution
+            )}
+          </strong>
+          and an estimated funding gap of{" "}
+          <strong>
+            {formatCurrency(
+              fundingGap
+            )}
+          </strong>
+          .
+        </p>
+
+        <p>
+          Market conditions should be validated
+          locally before making investment
+          decisions.
+        </p>
+
+      </div>
+
+
+      {/* =====================================================
           DISCLAIMER
-      ================================= */}
+      ===================================================== */}
 
       <div className="report-note">
 
         <div className="report-note-icon">
-          ℹ️
+          ⚠️
         </div>
 
         <div>
@@ -592,9 +1128,9 @@ function FinalReport() {
       </div>
 
 
-      {/* =================================
+      {/* =====================================================
           BUTTONS
-      ================================= */}
+      ===================================================== */}
 
       <div className="report-buttons">
 
@@ -602,7 +1138,9 @@ function FinalReport() {
           className="report-home-button"
           onClick={() => navigate("/")}
         >
-          ← {text.backToHome}
+          ←{" "}
+          {text.backToHome ||
+            "Back to Home"}
         </button>
 
       </div>

@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
+import API from "../api";
 
 function Schemes() {
   const navigate = useNavigate();
   const { text } = useLanguage();
 
   const [user, setUser] = useState({});
+  const [schemes, setSchemes] = useState([]);
   const [selectedScheme, setSelectedScheme] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   /* =============================
-     LOAD USER DATA
+     LOAD USER + GOVERNMENT SCHEMES
   ============================= */
 
   useEffect(() => {
@@ -18,79 +22,95 @@ function Schemes() {
       JSON.parse(localStorage.getItem("grambizUser")) || {};
 
     setUser(savedUser);
+
+    const loadSchemes = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await API.get("/api/schemes");
+
+        console.log(
+          "GRAMBIZ AI - GOVERNMENT SCHEMES:",
+          response.data
+        );
+
+        const backendSchemes =
+          Array.isArray(response.data)
+            ? response.data
+            : response.data.schemes || [];
+
+        const formattedSchemes = backendSchemes.map(
+          (scheme, index) => ({
+            id:
+              scheme.scheme_name
+                ?.toLowerCase()
+                .replace(/[^a-z0-9]+/g, "-") ||
+              `scheme-${index}`,
+
+            icon:
+              index === 0
+                ? "💰"
+                : index === 1
+                ? "🏭"
+                : "🚀",
+
+            name:
+              scheme.scheme_name ||
+              "Government Scheme",
+
+            tag:
+              index === 0
+                ? "Micro Business Finance"
+                : index === 1
+                ? "New Enterprise Support"
+                : "Greenfield Enterprise",
+
+            purpose:
+              scheme.purpose ||
+              "Information not available.",
+
+            suitableFor:
+              scheme.suitable_for ||
+              "Information not available.",
+
+            eligibility:
+              scheme.eligibility ||
+              "Eligibility information not available.",
+
+            documents:
+              scheme.documents ||
+              "Document information not available.",
+
+            officialSource:
+              scheme.official_source ||
+              "Official source not available.",
+
+            note:
+              scheme.warning ||
+              "Verify the latest scheme conditions through the official source."
+          })
+        );
+
+        setSchemes(formattedSchemes);
+
+      } catch (apiError) {
+        console.error(
+          "GRAMBIZ AI - SCHEMES API ERROR:",
+          apiError
+        );
+
+        setError(
+          "Unable to load government scheme data from the backend."
+        );
+
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadSchemes();
   }, []);
-
-  /* =============================
-     FINANCING SCHEMES
-  ============================= */
-
-  const schemes = [
-    {
-      id: "mudra",
-      icon: "💰",
-      name: text.mudraName || "PM MUDRA Yojana",
-      tag: "Micro Business Finance",
-
-      purpose:
-        text.mudraPurpose ||
-        "Provides institutional credit support for eligible micro and small business activities.",
-
-      suitableFor:
-        text.mudraSuitable ||
-        "Small businesses, service activities, artisans and other eligible income-generating activities.",
-
-      documents:
-        text.mudraDocuments ||
-        "Identity proof, address proof, business or project details and documents requested by the lender.",
-
-      note:
-        "Loan eligibility and amount depend on the applicant, business activity, lender assessment and applicable rules."
-    },
-
-    {
-      id: "pmegp",
-      icon: "🏭",
-      name: text.pmegpName || "PMEGP",
-      tag: "New Enterprise Support",
-
-      purpose:
-        text.pmegpPurpose ||
-        "Supports eligible new micro-enterprises through a credit-linked subsidy structure.",
-
-      suitableFor:
-        text.pmegpSuitable ||
-        "Eligible individuals planning to establish a new micro-enterprise.",
-
-      documents:
-        text.pmegpDocuments ||
-        "Identity proof, project report, applicable certificates, education or skill documents and other required documents.",
-
-      note:
-        "PMEGP has specific eligibility conditions for new units, project size and other applicant requirements."
-    },
-
-    {
-      id: "standup",
-      icon: "🚀",
-      name: text.standupName || "Stand-Up India",
-      tag: "Greenfield Enterprise",
-
-      purpose:
-        text.standupPurpose ||
-        "Provides bank finance for eligible greenfield enterprises under the applicable scheme framework.",
-
-      suitableFor:
-        text.standupSuitable ||
-        "Eligible entrepreneurs covered by the scheme's specified beneficiary categories.",
-
-      documents:
-        text.standupDocuments ||
-        "Identity proof, business plan, project details and other documents required by the lending institution.",
-
-      note:
-        "Current scheme availability and applicable replacement arrangements should be verified through official government sources before applying."
-    }
-  ];
 
   /* =============================
      CHECK ELIGIBILITY
@@ -110,7 +130,11 @@ function Schemes() {
        PM MUDRA CHECK
     ============================= */
 
-    if (scheme.id === "mudra") {
+    if (
+      scheme.name
+        .toLowerCase()
+        .includes("mudra")
+    ) {
       checks = [
         {
           label: "Business purpose provided",
@@ -143,7 +167,11 @@ function Schemes() {
        PMEGP CHECK
     ============================= */
 
-    if (scheme.id === "pmegp") {
+    else if (
+      scheme.name
+        .toLowerCase()
+        .includes("pmegp")
+    ) {
       checks = [
         {
           label: "Business interest provided",
@@ -173,7 +201,11 @@ function Schemes() {
        STAND-UP INDIA CHECK
     ============================= */
 
-    if (scheme.id === "standup") {
+    else if (
+      scheme.name
+        .toLowerCase()
+        .includes("stand-up")
+    ) {
       checks = [
         {
           label: "Business information provided",
@@ -199,6 +231,28 @@ function Schemes() {
         "Additional beneficiary information and the current official scheme status must be verified before considering this option.";
     }
 
+    else {
+      checks = [
+        {
+          label: "Business information provided",
+          passed: Boolean(user.business)
+        },
+        {
+          label: "Budget information provided",
+          passed: budget > 0
+        },
+        {
+          label: "Scheme-specific eligibility",
+          passed: false
+        }
+      ];
+
+      status = "Verify Before Applying";
+
+      message =
+        "Please verify the scheme-specific eligibility conditions through the official source.";
+    }
+
     setSelectedScheme({
       ...scheme,
       status,
@@ -222,9 +276,7 @@ function Schemes() {
   return (
     <div className="schemes-page">
 
-      {/* =============================
-          HEADER
-      ============================= */}
+      {/* HEADER */}
 
       <div className="schemes-header">
 
@@ -237,7 +289,8 @@ function Schemes() {
         </div>
 
         <h1>
-          {text.financingTitle || "Financing Options"}
+          {text.financingTitle ||
+            "Financing Options"}
         </h1>
 
         <p>
@@ -261,121 +314,182 @@ function Schemes() {
 
       </div>
 
+      {/* LOADING */}
 
-      {/* =============================
-          SCHEME CARDS
-      ============================= */}
+      {loading && (
+        <div className="recommendation-empty">
 
-      <div className="schemes-list">
-
-        {schemes.map((scheme) => (
-
-          <div
-            className="scheme-card"
-            key={scheme.id}
-          >
-
-            {/* TOP */}
-
-            <div className="scheme-top">
-
-              <div className="scheme-card-icon">
-                {scheme.icon}
-              </div>
-
-              <span className="scheme-tag">
-                {scheme.tag}
-              </span>
-
-            </div>
-
-
-            {/* NAME */}
-
-            <h2>
-              {scheme.name}
-            </h2>
-
-
-            {/* PURPOSE */}
-
-            <div className="scheme-section">
-
-              <span className="scheme-label">
-                🎯 {text.purpose || "Purpose"}
-              </span>
-
-              <p>
-                {scheme.purpose}
-              </p>
-
-            </div>
-
-
-            {/* SUITABLE FOR */}
-
-            <div className="scheme-section">
-
-              <span className="scheme-label">
-                👥{" "}
-                {text.suitableFor ||
-                  "May be suitable for"}
-              </span>
-
-              <p>
-                {scheme.suitableFor}
-              </p>
-
-            </div>
-
-
-            {/* DOCUMENTS */}
-
-            <div className="scheme-section">
-
-              <span className="scheme-label">
-                📄{" "}
-                {text.requiredDocuments ||
-                  "Typical documents"}
-              </span>
-
-              <p>
-                {scheme.documents}
-              </p>
-
-            </div>
-
-
-            {/* NOTE */}
-
-            <div className="scheme-card-note">
-              ℹ️ {scheme.note}
-            </div>
-
-
-            {/* BUTTON */}
-
-            <button
-              className="scheme-check-button"
-              onClick={() =>
-                checkEligibility(scheme)
-              }
-            >
-              🔎{" "}
-              {text.checkEligibility ||
-                "Check Eligibility"}
-            </button>
-
+          <div className="empty-icon">
+            🏦
           </div>
 
-        ))}
+          <h2>
+            Loading financing options...
+          </h2>
 
-      </div>
+          <p>
+            Fetching government scheme information
+            from GramBiz AI.
+          </p>
 
+        </div>
+      )}
 
-      {/* =============================
-          ELIGIBILITY POPUP
-      ============================= */}
+      {/* ERROR */}
+
+      {!loading && error && (
+        <div className="recommendation-empty">
+
+          <div className="empty-icon">
+            ⚠️
+          </div>
+
+          <h2>
+            Unable to Load Schemes
+          </h2>
+
+          <p>
+            {error}
+          </p>
+
+        </div>
+      )}
+
+      {/* SCHEME CARDS */}
+
+      {!loading && !error && (
+        <div className="schemes-list">
+
+          {schemes.map((scheme) => (
+
+            <div
+              className="scheme-card"
+              key={scheme.id}
+            >
+
+              {/* TOP */}
+
+              <div className="scheme-top">
+
+                <div className="scheme-card-icon">
+                  {scheme.icon}
+                </div>
+
+                <span className="scheme-tag">
+                  {scheme.tag}
+                </span>
+
+              </div>
+
+              {/* NAME */}
+
+              <h2>
+                {scheme.name}
+              </h2>
+
+              {/* PURPOSE */}
+
+              <div className="scheme-section">
+
+                <span className="scheme-label">
+                  🎯{" "}
+                  {text.purpose ||
+                    "Purpose"}
+                </span>
+
+                <p>
+                  {scheme.purpose}
+                </p>
+
+              </div>
+
+              {/* SUITABLE FOR */}
+
+              <div className="scheme-section">
+
+                <span className="scheme-label">
+                  👥{" "}
+                  {text.suitableFor ||
+                    "May be suitable for"}
+                </span>
+
+                <p>
+                  {scheme.suitableFor}
+                </p>
+
+              </div>
+
+              {/* DOCUMENTS */}
+
+              <div className="scheme-section">
+
+                <span className="scheme-label">
+                  📄{" "}
+                  {text.requiredDocuments ||
+                    "Typical documents"}
+                </span>
+
+                <p>
+                  {scheme.documents}
+                </p>
+
+              </div>
+
+              {/* ELIGIBILITY */}
+
+              <div className="scheme-section">
+
+                <span className="scheme-label">
+                  ✅ Eligibility
+                </span>
+
+                <p>
+                  {scheme.eligibility}
+                </p>
+
+              </div>
+
+              {/* OFFICIAL SOURCE */}
+
+              <div className="scheme-section">
+
+                <span className="scheme-label">
+                  🔗 Official Source
+                </span>
+
+                <p>
+                  {scheme.officialSource}
+                </p>
+
+              </div>
+
+              {/* NOTE */}
+
+              <div className="scheme-card-note">
+                ℹ️ {scheme.note}
+              </div>
+
+              {/* BUTTON */}
+
+              <button
+                className="scheme-check-button"
+                onClick={() =>
+                  checkEligibility(scheme)
+                }
+              >
+                🔎{" "}
+                {text.checkEligibility ||
+                  "Check Eligibility"}
+              </button>
+
+            </div>
+
+          ))}
+
+        </div>
+      )}
+
+      {/* ELIGIBILITY POPUP */}
 
       {selectedScheme && (
 
@@ -383,7 +497,7 @@ function Schemes() {
 
           <div className="eligibility-result">
 
-            {/* CLOSE ICON */}
+            {/* CLOSE */}
 
             <button
               className="eligibility-close"
@@ -391,7 +505,6 @@ function Schemes() {
             >
               ×
             </button>
-
 
             {/* HEADER */}
 
@@ -414,7 +527,6 @@ function Schemes() {
               </div>
 
             </div>
-
 
             {/* STATUS */}
 
@@ -440,13 +552,11 @@ function Schemes() {
 
             </div>
 
-
             {/* MESSAGE */}
 
             <p className="eligibility-message">
               {selectedScheme.message}
             </p>
-
 
             {/* USER DETAILS */}
 
@@ -466,7 +576,6 @@ function Schemes() {
 
               </div>
 
-
               <div className="eligibility-detail">
 
                 <span>
@@ -483,7 +592,6 @@ function Schemes() {
               </div>
 
             </div>
-
 
             {/* PRELIMINARY CHECKS */}
 
@@ -524,7 +632,6 @@ function Schemes() {
 
             </div>
 
-
             {/* WARNING */}
 
             <div className="eligibility-warning">
@@ -546,6 +653,21 @@ function Schemes() {
 
             </div>
 
+            {/* OFFICIAL SOURCE */}
+
+            {selectedScheme.officialSource && (
+              <div className="eligibility-warning">
+
+                <strong>
+                  🔗 Official Source
+                </strong>
+
+                <p>
+                  {selectedScheme.officialSource}
+                </p>
+
+              </div>
+            )}
 
             {/* CLOSE BUTTON */}
 
@@ -562,10 +684,7 @@ function Schemes() {
 
       )}
 
-
-      {/* =============================
-          IMPORTANT NOTICE
-      ============================= */}
+      {/* IMPORTANT NOTICE */}
 
       <div className="scheme-note">
 
@@ -590,10 +709,7 @@ function Schemes() {
 
       </div>
 
-
-      {/* =============================
-          FINAL REPORT BUTTON
-      ============================= */}
+      {/* FINAL REPORT */}
 
       <button
         className="schemes-final-button"
